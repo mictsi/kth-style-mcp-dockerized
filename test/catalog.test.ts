@@ -390,3 +390,31 @@ test('every reported entrypoint resolves to a file that exists', async () => {
     }
   }
 })
+
+
+test('a trailing block comment does not hide a token declaration', async () => {
+  // @kth/style writes `$font-figtree: Figtree, sans-serif; /* stylelint... */`.
+  // The variable pattern used to require the line to end after the semicolon or
+  // a // comment, so this declaration was silently dropped.
+  const catalog = await buildCatalog(fixtureSourceDir)
+  const token = getToken(catalog, 'font-figtree')
+
+  assert.equal(token?.rawValue, 'Figtree, sans-serif')
+  assert.equal(token?.comment, 'stylelint-disable-line value-keyword-case')
+})
+
+test('svg icon and logotype assets are indexed with their content', async () => {
+  const catalog = await buildCatalog(fixtureSourceDir)
+
+  const menu = getIcon(catalog, 'menu')
+  assert.ok(menu?.variants[0].svg, 'icon svg content was not indexed')
+  assert.ok(menu?.variants[0].relativePath?.endsWith('menu.svg'))
+
+  const logotype = getIcon(catalog, 'logotype-blue')
+  assert.equal(logotype?.kind, 'logotype')
+  assert.ok(logotype?.variants[0].svg, 'logotype svg content was not indexed')
+  assert.deepEqual(
+    searchIcons(catalog, { query: 'logotype' }).map((icon) => icon.name).sort(),
+    ['logotype-blue', 'logotype-white']
+  )
+})

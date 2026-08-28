@@ -704,7 +704,10 @@ export function getComponentGuidance(
           { selectorType: 'class', name: 'kth-icon-button close', purpose: 'Close button lookup used by MenuPanel helpers and TranslationPanel.' },
           { selectorType: 'attribute', name: 'href', purpose: 'TranslationLink/TranslationPanel use href presence to decide whether to open the dialog or navigate directly.' },
         ],
-        notes: ['TranslationPanel is a <dialog>; MenuPanel helpers can also wire non-modal and modal dialogs using the same close button convention.'],
+        notes: [
+          'TranslationPanel is a <dialog>; MenuPanel helpers can also wire non-modal and modal dialogs using the same close button convention.',
+          'MenuPanel.initTranslationModal(button, modal) is the dedicated helper: it only opens the dialog when the trigger has no href, so a link falls through to navigation.',
+        ],
       }
     case 'local-navigation':
       return {

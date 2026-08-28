@@ -178,11 +178,18 @@ interface IconMixinReference {
   sourceIconName: string
 }
 
-const TOP_LEVEL_VARIABLE_PATTERN = /^\s*\$([\w-]+)\s*:\s*(.+?)\s*(?:!default)?\s*;\s*(?:\/\/\s*(.*))?$/
+// A trailing comment may be a line comment or a block comment; @kth/style uses
+// the latter for stylelint pragmas, e.g. `$font-figtree: Figtree, sans-serif;
+// /* stylelint-disable-line value-keyword-case */`. Missing that form silently
+// dropped the declaration.
+const TOP_LEVEL_VARIABLE_PATTERN =
+  /^\s*\$([\w-]+)\s*:\s*(.+?)\s*(?:!default)?\s*;\s*(?:\/\/\s*(.*)|\/\*\s*(.*?)\s*\*\/)?\s*$/
 const MIXIN_PATTERN = /^\s*@mixin\s+([\w-]+)(?:\((.*?)\))?\s*\{/
 const THEME_VARIABLE_PATTERN = /^\s*--([\w-]+)\s*:\s*(.+?)\s*;\s*(?:\/\/\s*(.*))?$/
 const RAW_ICON_REFERENCE_PATTERN = /raw\.\$(icon-[\w-]+)/
-const EXTENSION_PATTERN = /\.(scss|css|ts|tsx)$/
+// Includes svg so icon and logotype assets are discoverable; every caller
+// filters walk() results down to the extensions it actually wants.
+const EXTENSION_PATTERN = /\.(scss|css|ts|tsx|svg)$/
 const CONTEXT_ALIASES = new Map([
   ['external', 'inverse'],
   ['external-web', 'inverse'],
@@ -704,7 +711,7 @@ function parseTopLevelVariables(filePath: string, content: string, category: Tok
           lineNumber: index + 1,
           rawValue: match[2].trim(),
           resolvedValue: null,
-          comment: [state.pendingComments.join(' '), match[3] ?? ''].join(' ').trim() || null,
+          comment: [state.pendingComments.join(' '), match[3] ?? match[4] ?? ''].join(' ').trim() || null,
           context: null,
           cssName: null,
           dependencyChain: [],
