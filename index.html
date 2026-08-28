@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kth-style-mcp — authoritative KTH Style values for coding agents</title>
+<meta name="description" content="An MCP server that answers your coding agent with exact KTH Style tokens, components and guidance, read from the installed @kth/style package.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* Palette is @kth/style itself: every value below is a real package token. */
+  :root {
+    --white: #fcfcfc;
+    --black: #212121;
+    --gray-lighter: #ededed;
+    --gray-light: #e6e6e6;
+    --gray-dark: #646464;
+    --sand: #ebe5e0;
+    --blue-kth: #004791;
+    --blue-kth-dark: #003975;
+    --blue-light: #def0ff;
+    --blue-lake: #036eb8;
+    --blue-marine: #000061;
+    --red: #c7321d;
+    --green: #3d784a;
+
+    --font-body: Figtree, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+    --measure: 74rem;
+    --gap: clamp(1.5rem, 4vw, 3.5rem);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--white);
+    color: var(--black);
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--blue-lake); text-underline-offset: 0.18em; }
+  a:hover { color: var(--blue-kth); }
+
+  :focus-visible {
+    outline: 3px solid var(--blue-lake);
+    outline-offset: 3px;
+  }
+
+  .wrap {
+    width: min(100% - 2.5rem, var(--measure));
+    margin-inline: auto;
+  }
+
+  /* ---- provenance stamp: the page's structural device ----
+     The server never answers without saying where a value came from.
+     Neither does this page. */
+  .prov {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--gray-dark);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5ch;
+  }
+  .prov::before {
+    content: "";
+    width: 1.6rem;
+    height: 1px;
+    background: var(--blue-kth);
+    opacity: 0.5;
+  }
+  .prov b { font-weight: 700; color: var(--blue-kth); }
+
+  /* ---- masthead ---- */
+  .masthead {
+    border-bottom: 1px solid var(--gray-light);
+    padding-block: 1.1rem;
+  }
+  .masthead .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .wordmark {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -0.02em;
+    color: var(--blue-marine);
+  }
+  .wordmark span { color: var(--blue-kth); }
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+  }
+  .badge {
+    border: 1px solid var(--gray-light);
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    color: var(--gray-dark);
+  }
+
+  /* ---- hero ---- */
+  .hero { padding-block: clamp(3rem, 8vw, 6rem) clamp(2.5rem, 6vw, 4.5rem); }
+  .hero .wrap {
+    display: grid;
+    gap: var(--gap);
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  @media (min-width: 60rem) {
+    .hero .wrap { grid-template-columns: 1.05fr 1fr; }
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue-kth);
+    margin: 0 0 1.4rem;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 1.4rem + 4.4vw, 4.4rem);
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    margin: 0 0 1.4rem;
+    color: var(--blue-marine);
+    text-wrap: balance;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--blue-kth);
+    /* the underline is the "resolved" mark, drawn in KTH blue */
+    box-shadow: inset 0 -0.18em 0 var(--blue-light);
+  }
+
+  .lede {
+    font-size: clamp(1.06rem, 1rem + 0.4vw, 1.3rem);
+    line-height: 1.5;
+    color: var(--black);
+    margin: 0 0 1.6rem;
+    max-width: 34ch;
+  }
+  .sub { color: var(--gray-dark); max-width: 46ch; margin: 0 0 2rem; }
+
+  .cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.75rem; }
+  .cta {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.7rem 1.1rem;
+    border: 1px solid var(--blue-kth);
+    background: var(--blue-kth);
+    color: var(--white);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .cta:hover { background: var(--blue-kth-dark); border-color: var(--blue-kth-dark); color: var(--white); }
+  .cta.ghost { background: transparent; color: var(--blue-kth); }
+  .cta.ghost:hover { background: var(--blue-light); color: var(--blue-marine); }
+
+  /* ---- the resolve card: guess vs. package-backed ---- */
+  .resolve {
+    border: 1px solid var(--gray-light);
+    background: var(--white);
+    box-shadow: 0 1px 0 var(--gray-lighter), 0 18px 40px -32px rgb(0 0 97 / 0.5);
+  }
+  .resolve-head {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    color: var(--gray-dark);
+    padding: 0.7rem 1.1rem;
+    border-bottom: 1px solid var(--gray-light);
+    background: var(--gray-lighter);
+  }
+  .turn { padding: 1.1rem; border-bottom: 1px solid var(--gray-light); }
+  .turn:last-child { border-bottom: 0; }
+  .who {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+    margin: 0 0 0.5rem;
+  }
+  .ask { margin: 0; font-size: 0.98rem; }
+
+  .guess {
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    color: var(--red);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+  .guess-note {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--red);
+    margin-top: 0.35rem;
+  }
+
+  .token-line {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 1.02rem;
+    font-weight: 500;
+    color: var(--blue-marine);
+    flex-wrap: wrap;
+  }
+  .swatch {
+    width: 1.5rem;
+    height: 1.5rem;
+    background: var(--blue-kth);
+    border: 1px solid rgb(0 0 97 / 0.25);
+    flex: none;
+  }
+  .resolved-meta {
+    margin-top: 0.7rem;
+    display: grid;
+    gap: 0.28rem;
+  }
+  .meta-row {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--gray-dark);
+    display: flex;
+    gap: 0.6rem;
+  }
+  .meta-row span:first-child { color: var(--blue-kth); min-width: 8ch; }
+
+  /* page-load resolve: the guess settles, the exact value arrives */
+  .fade-in { animation: fade-in 0.5s ease both; }
+  .d1 { animation-delay: 0.15s; }
+  .d2 { animation-delay: 0.5s; }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ---- generic section ---- */
+  section { padding-block: clamp(2.75rem, 6vw, 4.5rem); }
+  .band { background: var(--sand); border-block: 1px solid var(--gray-light); }
+  .band-blue { background: var(--blue-marine); color: var(--white); border-block: 0; }
+  .band-blue h2, .band-blue h3 { color: var(--white); }
+  .band-blue .prov { color: rgb(255 255 255 / 0.62); }
+  .band-blue .prov b { color: var(--blue-light); }
+  .band-blue .prov::before { background: var(--blue-light); }
+
+  h2 {
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    color: var(--blue-marine);
+    margin: 0.9rem 0 0.6rem;
+    text-wrap: balance;
+  }
+  .section-intro { color: var(--gray-dark); max-width: 58ch; margin: 0 0 2.2rem; }
+  .band-blue .section-intro { color: rgb(255 255 255 / 0.75); }
+
+  /* ---- steps: a real sequence, so it is numbered ---- */
+  .steps { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+  @media (min-width: 48rem) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .step { border-top: 2px solid var(--blue-kth); padding-top: 1rem; }
+  .band-blue .step { border-top-color: var(--blue-light); }
+  .step-n {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--blue-kth);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .band-blue .step-n { color: var(--blue-light); }
+  .step h3 { margin: 0 0 0.5rem; font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; }
+  .step p { margin: 0 0 0.9rem; font-size: 0.94rem; color: var(--gray-dark); }
+  .band-blue .step p { color: rgb(255 255 255 / 0.72); }
+
+  pre {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    overflow-x: auto;
+    background: var(--blue-marine);
+    color: var(--white);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.55;
+    border-left: 2px solid var(--blue-lake);
+  }
+  .band-blue pre { background: rgb(255 255 255 / 0.07); border-left-color: var(--blue-light); }
+  pre .c { color: #9fb6d4; }
+  pre .k { color: var(--blue-light); }
+
+  /* ---- tools ---- */
+  .tools { display: grid; gap: 0; grid-template-columns: 1fr; border-top: 1px solid var(--gray-light); }
+  @media (min-width: 42rem) { .tools { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 68rem) { .tools { grid-template-columns: repeat(3, 1fr); } }
+  .tool {
+    border-bottom: 1px solid var(--gray-light);
+    border-right: 1px solid var(--gray-light);
+    padding: 1.05rem 1.15rem;
+  }
+  .tool code {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--blue-kth);
+    display: block;
+    margin-bottom: 0.35rem;
+    word-break: break-word;
+  }
+  .tool p { margin: 0; font-size: 0.88rem; color: var(--gray-dark); }
+
+  /* ---- facts ---- */
+  .facts { display: grid; gap: 1.25rem 2rem; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 48rem) { .facts { grid-template-columns: repeat(4, 1fr); } }
+  .fact { border-top: 1px solid rgb(255 255 255 / 0.25); padding-top: 0.8rem; }
+  .fact b {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--blue-light);
+    line-height: 1;
+  }
+  .fact span { font-size: 0.82rem; color: rgb(255 255 255 / 0.72); }
+
+  /* ---- two-column prose ---- */
+  .cols { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
+  @media (min-width: 54rem) { .cols { grid-template-columns: 1fr 1fr; } }
+  .cols h3 { font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem; color: var(--blue-marine); }
+  .cols p { margin: 0 0 1rem; font-size: 0.95rem; }
+  ul.plain { margin: 0 0 1rem; padding-left: 1.1rem; font-size: 0.95rem; }
+  ul.plain li { margin-bottom: 0.45rem; }
+
+  footer {
+    border-top: 1px solid var(--gray-light);
+    padding-block: 2rem 3rem;
+    font-size: 0.88rem;
+    color: var(--gray-dark);
+  }
+  footer .wrap { display: grid; gap: 1rem; }
+  @media (min-width: 48rem) {
+    footer .wrap { grid-template-columns: 1fr auto; align-items: end; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="wordmark">kth-style<span>-mcp</span></div>
+    <div class="badges">
+      <span class="badge">MCP Streamable HTTP</span>
+      <span class="badge">Docker</span>
+      <span class="badge">MIT</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Design tokens for coding agents</p>
+        <h1>Your agent should not <em>guess</em> KTH blue.</h1>
+        <p class="lede">It should read the exact value out of the installed <code>@kth/style</code> package — and say which file and line it came from.</p>
+        <p class="sub">kth-style-mcp indexes the KTH Style package and serves it over MCP, so the agent writing your components asks for tokens, imports, class names and theme contexts instead of approximating them.</p>
+        <div class="cta-row">
+          <a class="cta" href="#run">Run it locally</a>
+          <a class="cta ghost" href="sample-site/index.html">Open the sample site</a>
+        </div>
+        <p class="prov">resolved from <b>@kth/style@1.14.1</b> · source: installed</p>
+      </div>
+
+      <div class="resolve fade-in d1">
+        <div class="resolve-head">agent session · one turn</div>
+
+        <div class="turn">
+          <p class="who">You</p>
+          <p class="ask">"Give the call-to-action the KTH blue background."</p>
+        </div>
+
+        <div class="turn">
+          <p class="who">Without the server</p>
+          <span class="guess">background: #0055a4;</span>
+          <p class="guess-note">plausible, close, wrong — and nothing says where it came from</p>
+        </div>
+
+        <div class="turn fade-in d2">
+          <p class="who">With kth_style_get_token</p>
+          <div class="token-line">
+            <span class="swatch" aria-hidden="true"></span>
+            <span>$color-blue-kth</span>
+            <span>#004791</span>
+          </div>
+          <div class="resolved-meta">
+            <div class="meta-row"><span>file</span><span>scss/tokens/colors.scss:14</span></div>
+            <div class="meta-row"><span>semantic</span><span>--color-primary (theme-default)</span></div>
+            <div class="meta-row"><span>package</span><span>@kth/style@1.14.1 · installed</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band-blue" id="facts">
+    <div class="wrap">
+      <p class="prov">indexed from the installed package at startup</p>
+      <h2>What it reads</h2>
+      <p class="section-intro">Everything is parsed out of the package on disk. Nothing is hand-copied into this server, so it does not drift when KTH Style ships a release.</p>
+      <div class="facts">
+        <div class="fact"><b>23</b><span>SCSS components, each with its import path and declared <code>kth-*</code> classes</span></div>
+        <div class="fact"><b>42</b><span>reference tokens: colors, spacing, typography</span></div>
+        <div class="fact"><b>5</b><span>theme contexts — default, intranet, student-web, inverse, dense</span></div>
+        <div class="fact"><b>30</b><span>icons and logotypes, with mixins and SVG content</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="run">
+    <div class="wrap">
+      <p class="prov"><b>run.sh</b> · docker-compose.yml</p>
+      <h2>Run it</h2>
+      <p class="section-intro">One container. It serves MCP over Streamable HTTP and needs nothing from your project.</p>
+      <div class="steps">
+        <div class="step">
+          <span class="step-n">01 / START</span>
+          <h3>Bring the container up</h3>
+          <p>Builds the image and starts it on loopback. <code>run.sh</code> also does <code>stop</code>, <code>logs</code>, <code>status</code> and <code>clean</code>.</p>
+          <pre><span class="c"># from the repo root</span>
+./run.sh run --build</pre>
+        </div>
+        <div class="step">
+          <span class="step-n">02 / CONNECT</span>
+          <h3>Point your agent at it</h3>
+          <p>Any MCP client that speaks Streamable HTTP. Set <code>BASE_PATH</code> when you publish it behind a reverse proxy.</p>
+          <pre>{
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"kth-style"</span>: {
+      <span class="k">"type"</span>: "http",
+      <span class="k">"url"</span>: "http://127.0.0.1:8888/mcp"
+    }
+  }
+}</pre>
+        </div>
+        <div class="step">
+          <span class="step-n">03 / CHECK</span>
+          <h3>Confirm it answers</h3>
+          <p>The health route reports the resolved paths, so you can see exactly what your client should call.</p>
+          <pre>curl 127.0.0.1:8888/healthz
+
+<span class="c">{"status":"ok",
+ "mcpPath":"/mcp"}</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="loop">
+    <div class="wrap">
+      <p class="prov">tools called by the agent, not by you</p>
+      <h2>Where it fits in the loop</h2>
+      <p class="section-intro">You keep writing prompts in your own words. The server changes what the agent does next: instead of recalling a hex value or inventing a class name, it looks them up and cites them.</p>
+
+      <div class="cols">
+        <div>
+          <h3>Starting a new page</h3>
+          <p>Ask for the shell and the agent pulls the scaffold, the header wiring and the entrypoints for the variant you named.</p>
+          <ul class="plain">
+            <li><code>suggest_theme_structure</code> — which entrypoints and scripts a public, intranet, student-web or external app needs</li>
+            <li><code>get_page_scaffold</code> — the section order for that variant</li>
+            <li><code>get_header_recipe</code> — dialog hooks, <code>data-id</code> pairing and the variant classes the header expects</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Building a component</h3>
+          <p>Ask for a table, an alert, a mobile menu. The agent gets the import path, the real class names and the tokens that component consumes.</p>
+          <ul class="plain">
+            <li><code>get_component_guidance</code> — any of the 23 components, plus the <code>navigation</code> and <code>modal</code> aliases</li>
+            <li><code>kth_style_get_token</code> — one exact value, per theme context</li>
+            <li><code>get_icon</code> — SVG content, the data-URI variable and the SCSS mixin name</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="prov" style="margin-top:1.5rem">unresolved values return diagnostics — never an approximation</p>
+    </div>
+  </section>
+
+  <section class="band" id="sample">
+    <div class="wrap">
+      <p class="prov">generated by <b>npm run sample</b> from live tool responses</p>
+      <h2>See what it serves</h2>
+      <p class="section-intro">The sample site renders every component, token, theme context and icon the server returns, so you can check how something looks before asking an agent to build with it — and check that what an agent tells you matches the package.</p>
+      <div class="steps">
+        <div class="step">
+          <span class="step-n">COMPONENTS</span>
+          <h3>All 23, live</h3>
+          <p>Each one with the import path and class names the server reports for it, styled by the package itself.</p>
+        </div>
+        <div class="step">
+          <span class="step-n">THEMES &amp; TOKENS</span>
+          <h3>Every context, side by side</h3>
+          <p>The same markup under all five contexts, plus 42 reference and 98 semantic tokens with the line each was parsed from.</p>
+        </div>
+        <div class="step">
+          <span class="step-n">HOW</span>
+          <h3>Built over MCP</h3>
+          <p>The build script is a plain MCP client. It calls the running server and writes the pages from the responses, so the demo cannot drift from the tools.</p>
+        </div>
+      </div>
+      <div class="cta-row" style="margin-top:2rem;margin-bottom:0">
+        <a class="cta" href="sample-site/index.html">Open the sample site</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="prov">18 tools · full list in README.md</p>
+      <h2>The tools</h2>
+      <p class="section-intro">The <code>kth_style_*</code> tools are the authoritative ones: their responses carry the package version and a <code>source</code> field recording how the package was found.</p>
+      <div class="tools">
+        <div class="tool"><code>kth_style_get_theme</code><p>A whole context: reference tokens, semantic tokens, assets and the SCSS to import.</p></div>
+        <div class="tool"><code>kth_style_get_token</code><p>One exact token, optionally resolved for a named theme context.</p></div>
+        <div class="tool"><code>kth_style_list_tokens</code><p>Reference and semantic families listed separately, with file and line.</p></div>
+        <div class="tool"><code>kth_style_list_components</code><p>Component import paths exactly as the installed package publishes them.</p></div>
+        <div class="tool"><code>kth_style_get_package_info</code><p>Version, package path, asset root and how the package was discovered.</p></div>
+        <div class="tool"><code>get_component_guidance</code><p>Per component: classes, tokens, mixins, icons and the theme variants it declares.</p></div>
+        <div class="tool"><code>get_header_recipe</code><p>Header and navigation wiring, including the legacy local-navigation IDs.</p></div>
+        <div class="tool"><code>get_page_scaffold</code><p>A deterministic page shell for each theme variant.</p></div>
+        <div class="tool"><code>suggest_theme_structure</code><p>Entrypoints, tokens, scripts and components for an app shape.</p></div>
+        <div class="tool"><code>search_tokens</code><p>Substring search across primitive tokens and parsed theme variables.</p></div>
+        <div class="tool"><code>search_mixins</code><p>Typography, theme and icon helper mixins with their signatures.</p></div>
+        <div class="tool"><code>search_icons</code><p>Icons and logotypes by name, mixin or path.</p></div>
+        <div class="tool"><code>get_icon</code><p>SVG content, data-URI variable and SCSS mixin for one icon.</p></div>
+        <div class="tool"><code>search_styles</code><p>Line-based search across the authored SCSS and TypeScript.</p></div>
+        <div class="tool"><code>get_entrypoints</code><p>The SCSS, CSS and JS entrypoints to reach for first.</p></div>
+        <div class="tool"><code>refresh_catalog</code><p>Rebuild the index after the package changes underneath you.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band-blue">
+    <div class="wrap">
+      <p class="prov">discovery order · <b>package.source</b> on every response</p>
+      <h2>Where the values come from</h2>
+      <p class="section-intro">The server reports its own provenance so you can tell an authoritative answer from a fallback. If it cannot find the package, tools return a structured diagnostic rather than a plausible guess.</p>
+      <div class="steps">
+        <div class="step">
+          <span class="step-n">DEFAULT</span>
+          <h3>installed</h3>
+          <p>The <code>node_modules/@kth/style</code> found by walking up from the server. This is what the container runs.</p>
+        </div>
+        <div class="step">
+          <span class="step-n">OVERRIDE</span>
+          <h3>source-dir</h3>
+          <p>Set <code>KTH_STYLE_SOURCE_DIR</code> to a monorepo checkout when you are developing KTH Style itself.</p>
+        </div>
+        <div class="step">
+          <span class="step-n">FLAGGED</span>
+          <h3>monorepo-default</h3>
+          <p>A legacy <code>../style</code> fallback. It still answers, but every response carries a warning that it is not package-backed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <p style="margin:0 0 0.4rem">MCP server created by <a href="https://github.com/jrolofsson">jrolofsson</a>. MIT licensed — see <a href="LICENSE">LICENSE</a> and <a href="THIRD_PARTY_NOTICES.md">third-party notices</a>.</p>
+      <p style="margin:0">Style values belong to the KTH <a href="https://github.com/KTH/style">style</a> packages; this server only indexes and reports them.</p>
+    </div>
+    <p class="prov">README.md · README.docker.md</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Themes — kth-style-mcp sample site</title>
+<meta name="description" content="Every component, token, theme and icon that kth-style-mcp serves, rendered from live MCP responses.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="kth-a11y-nav" href="#main">Skip to main content</a>
+
+<div class="kth-kpm">
+  <div class="kth-entrances">
+    <ul>
+      <li><a href="../index.html">kth-style-mcp</a></li>
+      <li><a href="https://github.com/KTH/style">@kth/style</a></li>
+    </ul>
+  </div>
+</div>
+
+<header class="kth-header">
+  <div class="kth-header__container">
+    <a href="index.html" class="kth-logotype">
+      <figure>
+        <img alt="KTH" width="64" height="64" src="assets/logotype-blue.svg">
+      </figure>
+    </a>
+
+    <nav class="kth-mega-menu" aria-label="Sample site">
+      <ul>
+        <li>
+          <a href="#" data-id="demo-panel" class="kth-menu-item dropdown">Menu panel</a>
+          <dialog class="kth-menu-panel">
+            <div class="kth-menu-panel__container">
+              <div class="kth-menu-panel__header">
+                <div>
+                  <h2>Menu panel</h2>
+                  <a href="components.html#menu-panel">About this component</a>
+                </div>
+                <button class="kth-icon-button close">
+                  <span class="kth-visually-hidden">Close</span>
+                </button>
+              </div>
+              <div class="kth-menu-panel__content">
+                <p>A non-modal <code>&lt;dialog&gt;</code> opened by <code>MenuPanel.init()</code>. It closes on Escape, on an outside click, and when focus leaves the header.</p>
+              </div>
+            </div>
+          </dialog>
+        </li>
+      </ul>
+    </nav>
+
+    <ul class="kth-header__tools">
+      <li>
+        <button class="kth-menu-item search">Search</button>
+        <dialog class="kth-menu-panel">
+          <div class="kth-menu-panel__container search">
+            <button class="kth-icon-button close">
+              <span class="kth-visually-hidden">Close</span>
+            </button>
+            <div class="kth-menu-panel__content search">
+              <form action="#" method="get" onsubmit="return false">
+                <div class="kth-search">
+                  <label for="site-search">Search this sample</label>
+                  <input type="text" id="site-search" name="q" autocomplete="off">
+                  <button type="submit"><span class="kth-visually-hidden">Search</span></button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </dialog>
+      </li>
+      <li>
+        <a href="#" class="kth-menu-item language" lang="sv">Svenska</a>
+        <dialog class="kth-translation">
+          <button class="kth-icon-button close">
+            <span class="kth-visually-hidden">Close</span>
+          </button>
+          <h2>Byt språk</h2>
+          <p>Opened by <code>MenuPanel.initTranslationModal()</code>, which only intercepts the click when the trigger has no <code>href</code> of its own.</p>
+        </dialog>
+      </li>
+    </ul>
+
+    <button class="kth-menu-item menu collapsable">Menu</button>
+
+    <nav class="kth-mega-menu--collapsable" aria-label="Sample site, mobile">
+      <dialog class="kth-mobile-menu">
+        <button class="kth-icon-button close">
+          <span class="kth-visually-hidden">Close</span>
+        </button>
+        <ul>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="components.html">Components</a></li>
+          <li><a href="themes.html">Themes</a></li>
+          <li><a href="tokens.html">Tokens</a></li>
+          <li><a href="icons.html">Icons</a></li>
+        </ul>
+      </dialog>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="sample-main">
+  <div class="kth-content">
+    <div class="sample-shell">
+      <nav class="kth-breadcrumbs" aria-label="Breadcrumbs">
+        <ol>
+          <li><a href="../index.html">kth-style-mcp</a></li>
+          <li><a href="index.html">Sample site</a></li>
+          <li>Themes</li>
+        </ol>
+      </nav>
+
+      <div class="sample-lede">
+        <h1>Themes</h1>
+        <p>The server reports 5 theme contexts. Each panel below opts into one of them, so the identical markup can be compared across all of them at once.</p>
+      </div>
+
+      <nav class="sample-nav" aria-label="Sample pages">
+          <a class="kth-menu-item" href="index.html">Overview</a>
+          <a class="kth-menu-item" href="components.html">Components</a>
+          <a class="kth-menu-item dropdown" href="themes.html" aria-current="page">Themes</a>
+          <a class="kth-menu-item" href="tokens.html">Tokens</a>
+          <a class="kth-menu-item" href="icons.html">Icons</a>
+      </nav>
+
+      <section class="sample-section" id="theme-default">
+        <h2>theme-default</h2>
+        <p class="sample-note">The public web theme. The package reset applies it to <code>:root</code>, so it is what you get for free.</p>
+        <p class="sample-source">via <b>kth_style_get_theme</b> · context: default · 26 semantic tokens</p>
+        <div class="sample-theme default">
+            <h3>Heading in this context</h3>
+            <p>Body text, a <a href="#theme-default">link</a>, and the components below all take their colours from this context.</p>
+            <div class="sample-demo">
+              <button class="kth-button">Primary</button>
+              <button class="kth-button secondary">Secondary</button>
+            </div>
+            <div class="kth-alert info"><h2>Alert</h2><p>Same markup, different context.</p></div>
+          </div>
+          <div class="sample-grid sample-grid--spaced">
+            <div class="sample-swatch"><div class="chip" style="background:#212121"></div><dl><dt>--color-text</dt><dd>#212121</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#646464"></div><dl><dt>--color-text-muted</dt><dd>#646464</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#fcfcfc"></div><dl><dt>--color-background</dt><dd>#fcfcfc</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#ededed"></div><dl><dt>--color-background-alt</dt><dd>#ededed</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#fcfcfc"></div><dl><dt>--color-header</dt><dd>#fcfcfc</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#000061"></div><dl><dt>--color-on-header</dt><dd>#000061</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#004791"></div><dl><dt>--color-primary</dt><dd>#004791</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#003975"></div><dl><dt>--color-primary-hover</dt><dd>#003975</dd></dl></div>
+          </div>
+      </section>
+
+      <section class="sample-section" id="theme-student-web">
+        <h2>theme-student-web</h2>
+        <p class="sample-note">The student web palette.</p>
+        <p class="sample-source">via <b>kth_style_get_theme</b> · context: student-web · 23 semantic tokens</p>
+        <div class="sample-theme student-web">
+            <h3>Heading in this context</h3>
+            <p>Body text, a <a href="#theme-student-web">link</a>, and the components below all take their colours from this context.</p>
+            <div class="sample-demo">
+              <button class="kth-button">Primary</button>
+              <button class="kth-button secondary">Secondary</button>
+            </div>
+            <div class="kth-alert info"><h2>Alert</h2><p>Same markup, different context.</p></div>
+          </div>
+          <div class="sample-grid sample-grid--spaced">
+            <div class="sample-swatch"><div class="chip" style="background:#212121"></div><dl><dt>--color-text</dt><dd>#212121</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#646464"></div><dl><dt>--color-text-muted</dt><dd>#646464</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#def0ff"></div><dl><dt>--color-background</dt><dd>#def0ff</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#ededed"></div><dl><dt>--color-background-alt</dt><dd>#ededed</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#def0ff"></div><dl><dt>--color-header</dt><dd>#def0ff</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#000061"></div><dl><dt>--color-on-header</dt><dd>#000061</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#004791"></div><dl><dt>--color-primary</dt><dd>#004791</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#003975"></div><dl><dt>--color-primary-hover</dt><dd>#003975</dd></dl></div>
+          </div>
+      </section>
+
+      <section class="sample-section" id="theme-intranet">
+        <h2>theme-intranet</h2>
+        <p class="sample-note">The intranet palette. Header and footer take a matching <code>.intranet</code> class.</p>
+        <p class="sample-source">via <b>kth_style_get_theme</b> · context: intranet · 23 semantic tokens</p>
+        <div class="sample-theme intranet">
+            <h3>Heading in this context</h3>
+            <p>Body text, a <a href="#theme-intranet">link</a>, and the components below all take their colours from this context.</p>
+            <div class="sample-demo">
+              <button class="kth-button">Primary</button>
+              <button class="kth-button secondary">Secondary</button>
+            </div>
+            <div class="kth-alert info"><h2>Alert</h2><p>Same markup, different context.</p></div>
+          </div>
+          <div class="sample-grid sample-grid--spaced">
+            <div class="sample-swatch"><div class="chip" style="background:#212121"></div><dl><dt>--color-text</dt><dd>#212121</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#646464"></div><dl><dt>--color-text-muted</dt><dd>#646464</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#ebe5e0"></div><dl><dt>--color-background</dt><dd>#ebe5e0</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#f2f2f2"></div><dl><dt>--color-background-alt</dt><dd>#f2f2f2</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#ebe5e0"></div><dl><dt>--color-header</dt><dd>#ebe5e0</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#000061"></div><dl><dt>--color-on-header</dt><dd>#000061</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#004791"></div><dl><dt>--color-primary</dt><dd>#004791</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#003975"></div><dl><dt>--color-primary-hover</dt><dd>#003975</dd></dl></div>
+          </div>
+      </section>
+
+      <section class="sample-section" id="theme-inverse">
+        <h2>theme-inverse</h2>
+        <p class="sample-note">The inverted palette. The server also answers to <code>external</code>, which aliases onto this context.</p>
+        <p class="sample-source">via <b>kth_style_get_theme</b> · context: inverse · 23 semantic tokens</p>
+        <div class="sample-theme inverse">
+            <h3>Heading in this context</h3>
+            <p>Body text, a <a href="#theme-inverse">link</a>, and the components below all take their colours from this context.</p>
+            <div class="sample-demo">
+              <button class="kth-button">Primary</button>
+              <button class="kth-button secondary">Secondary</button>
+            </div>
+            <div class="kth-alert info"><h2>Alert</h2><p>Same markup, different context.</p></div>
+          </div>
+          <div class="sample-grid sample-grid--spaced">
+            <div class="sample-swatch"><div class="chip" style="background:#fcfcfc"></div><dl><dt>--color-text</dt><dd>#fcfcfc</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#f2f2f2"></div><dl><dt>--color-text-muted</dt><dd>#f2f2f2</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#004791"></div><dl><dt>--color-background</dt><dd>#004791</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#000061"></div><dl><dt>--color-background-alt</dt><dd>#000061</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#000061"></div><dl><dt>--color-header</dt><dd>#000061</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#fcfcfc"></div><dl><dt>--color-on-header</dt><dd>#fcfcfc</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#fcfcfc"></div><dl><dt>--color-primary</dt><dd>#fcfcfc</dd></dl></div>
+            <div class="sample-swatch"><div class="chip" style="background:#fcfcfc"></div><dl><dt>--color-primary-hover</dt><dd>#fcfcfc</dd></dl></div>
+          </div>
+      </section>
+
+      <section class="sample-section" id="theme-dense">
+        <h2>theme-dense</h2>
+        <p class="sample-note">A spacing context rather than a colour one: it tightens the <code>--space-inner-*</code> variables and leaves the palette alone.</p>
+        <p class="sample-source">via <b>kth_style_get_theme</b> · context: dense · 3 semantic tokens</p>
+        <div class="sample-theme dense">
+            <h3>Heading in this context</h3>
+            <p>Body text, a <a href="#theme-dense">link</a>, and the components below all take their colours from this context.</p>
+            <div class="sample-demo">
+              <button class="kth-button">Primary</button>
+              <button class="kth-button secondary">Secondary</button>
+            </div>
+            <div class="kth-alert info"><h2>Alert</h2><p>Same markup, different context.</p></div>
+          </div>
+          <div class="sample-grid sample-grid--spaced">
+            
+          </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="kth-footer">
+  <div class="kth-footer__content sample-shell">
+    <p>Built from live MCP responses against <code>@kth/style 1.14.1</code>, discovered as <code>installed</code>. No value on this page was written by hand.</p>
+    <p>Rebuild with <code>npm run sample</code> while the server is running. Back to the <a href="../index.html">project overview</a>.</p>
+  </div>
+</footer>
+
+<script type="module" src="sample.js"></script>
+</body>
+</html>

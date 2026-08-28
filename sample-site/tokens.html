@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tokens — kth-style-mcp sample site</title>
+<meta name="description" content="Every component, token, theme and icon that kth-style-mcp serves, rendered from live MCP responses.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="kth-a11y-nav" href="#main">Skip to main content</a>
+
+<div class="kth-kpm">
+  <div class="kth-entrances">
+    <ul>
+      <li><a href="../index.html">kth-style-mcp</a></li>
+      <li><a href="https://github.com/KTH/style">@kth/style</a></li>
+    </ul>
+  </div>
+</div>
+
+<header class="kth-header">
+  <div class="kth-header__container">
+    <a href="index.html" class="kth-logotype">
+      <figure>
+        <img alt="KTH" width="64" height="64" src="assets/logotype-blue.svg">
+      </figure>
+    </a>
+
+    <nav class="kth-mega-menu" aria-label="Sample site">
+      <ul>
+        <li>
+          <a href="#" data-id="demo-panel" class="kth-menu-item dropdown">Menu panel</a>
+          <dialog class="kth-menu-panel">
+            <div class="kth-menu-panel__container">
+              <div class="kth-menu-panel__header">
+                <div>
+                  <h2>Menu panel</h2>
+                  <a href="components.html#menu-panel">About this component</a>
+                </div>
+                <button class="kth-icon-button close">
+                  <span class="kth-visually-hidden">Close</span>
+                </button>
+              </div>
+              <div class="kth-menu-panel__content">
+                <p>A non-modal <code>&lt;dialog&gt;</code> opened by <code>MenuPanel.init()</code>. It closes on Escape, on an outside click, and when focus leaves the header.</p>
+              </div>
+            </div>
+          </dialog>
+        </li>
+      </ul>
+    </nav>
+
+    <ul class="kth-header__tools">
+      <li>
+        <button class="kth-menu-item search">Search</button>
+        <dialog class="kth-menu-panel">
+          <div class="kth-menu-panel__container search">
+            <button class="kth-icon-button close">
+              <span class="kth-visually-hidden">Close</span>
+            </button>
+            <div class="kth-menu-panel__content search">
+              <form action="#" method="get" onsubmit="return false">
+                <div class="kth-search">
+                  <label for="site-search">Search this sample</label>
+                  <input type="text" id="site-search" name="q" autocomplete="off">
+                  <button type="submit"><span class="kth-visually-hidden">Search</span></button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </dialog>
+      </li>
+      <li>
+        <a href="#" class="kth-menu-item language" lang="sv">Svenska</a>
+        <dialog class="kth-translation">
+          <button class="kth-icon-button close">
+            <span class="kth-visually-hidden">Close</span>
+          </button>
+          <h2>Byt språk</h2>
+          <p>Opened by <code>MenuPanel.initTranslationModal()</code>, which only intercepts the click when the trigger has no <code>href</code> of its own.</p>
+        </dialog>
+      </li>
+    </ul>
+
+    <button class="kth-menu-item menu collapsable">Menu</button>
+
+    <nav class="kth-mega-menu--collapsable" aria-label="Sample site, mobile">
+      <dialog class="kth-mobile-menu">
+        <button class="kth-icon-button close">
+          <span class="kth-visually-hidden">Close</span>
+        </button>
+        <ul>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="components.html">Components</a></li>
+          <li><a href="themes.html">Themes</a></li>
+          <li><a href="tokens.html">Tokens</a></li>
+          <li><a href="icons.html">Icons</a></li>
+        </ul>
+      </dialog>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="sample-main">
+  <div class="kth-content">
+    <div class="sample-shell">
+      <nav class="kth-breadcrumbs" aria-label="Breadcrumbs">
+        <ol>
+          <li><a href="../index.html">kth-style-mcp</a></li>
+          <li><a href="index.html">Sample site</a></li>
+          <li>Tokens</li>
+        </ol>
+      </nav>
+
+      <div class="sample-lede">
+        <h1>Tokens</h1>
+        <p>42 reference tokens and 98 semantic tokens, exactly as the server returns them — including the line each one was parsed from. This is what an agent reads instead of guessing a hex value.</p>
+      </div>
+
+      <nav class="sample-nav" aria-label="Sample pages">
+          <a class="kth-menu-item" href="index.html">Overview</a>
+          <a class="kth-menu-item" href="components.html">Components</a>
+          <a class="kth-menu-item" href="themes.html">Themes</a>
+          <a class="kth-menu-item dropdown" href="tokens.html" aria-current="page">Tokens</a>
+          <a class="kth-menu-item" href="icons.html">Icons</a>
+      </nav>
+
+      <section class="sample-section" id="tokens-colors">
+        <h2>Colour</h2>
+        <p class="sample-note">Reference tokens are Sass variables. The semantic layer further down maps them onto CSS custom properties, one set per theme context.</p>
+        <p class="sample-source">via <b>kth_style_list_tokens</b> · tokenType: reference · 25 tokens</p>
+        <div class="sample-grid">
+          <div class="sample-swatch">
+            <div class="chip" style="background:#fcfcfc"></div>
+            <dl>
+              <dt>$color-white</dt>
+              <dd>#fcfcfc</dd>
+              <dd>line 2</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#212121"></div>
+            <dl>
+              <dt>$color-black</dt>
+              <dd>#212121</dd>
+              <dd>line 3</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:rgb(33 33 33 / 10%)"></div>
+            <dl>
+              <dt>$color-black-opacity10</dt>
+              <dd>rgb(33 33 33 / 10%)</dd>
+              <dd>line 4</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#f2f2f2"></div>
+            <dl>
+              <dt>$color-gray-lightest</dt>
+              <dd>#f2f2f2</dd>
+              <dd>line 5</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#ededed"></div>
+            <dl>
+              <dt>$color-gray-lighter</dt>
+              <dd>#ededed</dd>
+              <dd>line 6</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#e6e6e6"></div>
+            <dl>
+              <dt>$color-gray-light</dt>
+              <dd>#e6e6e6</dd>
+              <dd>line 7</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#a5a5a5"></div>
+            <dl>
+              <dt>$color-gray-medium</dt>
+              <dd>#a5a5a5</dd>
+              <dd>line 8</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#646464"></div>
+            <dl>
+              <dt>$color-gray-dark</dt>
+              <dd>#646464</dd>
+              <dd>line 9</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#323232"></div>
+            <dl>
+              <dt>$color-gray-darkest</dt>
+              <dd>#323232</dd>
+              <dd>line 10</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#ebe5e0"></div>
+            <dl>
+              <dt>$color-sand</dt>
+              <dd>#ebe5e0</dd>
+              <dd>line 13</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#004791"></div>
+            <dl>
+              <dt>$color-blue-kth</dt>
+              <dd>#004791</dd>
+              <dd>line 14</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#003975"></div>
+            <dl>
+              <dt>$color-blue-kth-dark</dt>
+              <dd>#003975</dd>
+              <dd>line 15</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#def0ff"></div>
+            <dl>
+              <dt>$color-blue-light</dt>
+              <dd>#def0ff</dd>
+              <dd>line 16</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#6298d2"></div>
+            <dl>
+              <dt>$color-blue-sky</dt>
+              <dd>#6298d2</dd>
+              <dd>line 17</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#036eb8"></div>
+            <dl>
+              <dt>$color-blue-lake</dt>
+              <dd>#036eb8</dd>
+              <dd>line 18</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#000061"></div>
+            <dl>
+              <dt>$color-blue-marine</dt>
+              <dd>#000061</dd>
+              <dd>line 19</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#221dd9"></div>
+            <dl>
+              <dt>$color-blue-digital</dt>
+              <dd>#221dd9</dd>
+              <dd>line 20</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#fad6d6"></div>
+            <dl>
+              <dt>$color-red-light</dt>
+              <dd>#fad6d6</dd>
+              <dd>line 23</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#c7321d"></div>
+            <dl>
+              <dt>$color-red</dt>
+              <dd>#c7321d</dd>
+              <dd>line 24</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#bf2c17"></div>
+            <dl>
+              <dt>$color-red-dark</dt>
+              <dd>#bf2c17</dd>
+              <dd>line 25</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#962312"></div>
+            <dl>
+              <dt>$color-red-darker</dt>
+              <dd>#962312</dd>
+              <dd>line 26</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#d8ffe7"></div>
+            <dl>
+              <dt>$color-green-light</dt>
+              <dd>#d8ffe7</dd>
+              <dd>line 27</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#3d784a"></div>
+            <dl>
+              <dt>$color-green</dt>
+              <dd>#3d784a</dd>
+              <dd>line 28</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#366f43"></div>
+            <dl>
+              <dt>$color-green-dark</dt>
+              <dd>#366f43</dd>
+              <dd>line 29</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip" style="background:#264f30"></div>
+            <dl>
+              <dt>$color-green-darker</dt>
+              <dd>#264f30</dd>
+              <dd>line 30</dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="sample-section" id="tokens-spacing">
+        <h2>Spacing</h2>
+        <p class="sample-note">The spacing scale.</p>
+        <p class="sample-source">via <b>kth_style_list_tokens</b> · tokenType: reference · 14 tokens</p>
+        <div class="sample-grid">
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-0</dt>
+              <dd>0</dd>
+              <dd>line 6</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-2</dt>
+              <dd>0.125rem</dd>
+              <dd>line 7</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-4</dt>
+              <dd>0.25rem</dd>
+              <dd>line 8</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-6</dt>
+              <dd>0.375rem</dd>
+              <dd>line 9</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-8</dt>
+              <dd>0.5rem</dd>
+              <dd>line 10</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-12</dt>
+              <dd>0.75rem</dd>
+              <dd>line 11</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-16</dt>
+              <dd>1rem</dd>
+              <dd>line 12</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-20</dt>
+              <dd>1.25rem</dd>
+              <dd>line 13</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-24</dt>
+              <dd>1.5rem</dd>
+              <dd>line 14</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-32</dt>
+              <dd>2rem</dd>
+              <dd>line 15</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-40</dt>
+              <dd>2.5rem</dd>
+              <dd>line 16</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-48</dt>
+              <dd>3rem</dd>
+              <dd>line 17</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-64</dt>
+              <dd>4rem</dd>
+              <dd>line 18</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$space-80</dt>
+              <dd>5rem</dd>
+              <dd>line 19</dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="sample-section" id="tokens-typography">
+        <h2>Typography</h2>
+        <p class="sample-note">Font family and weight tokens.</p>
+        <p class="sample-source">via <b>kth_style_list_tokens</b> · tokenType: reference · 3 tokens</p>
+        <div class="sample-grid">
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$font-figtree</dt>
+              <dd>Figtree, sans-serif</dd>
+              <dd>line 3</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$breakpoint-fluid-typography</dt>
+              <dd>48rem</dd>
+              <dd>line 4</dd>
+            </dl>
+          </div>
+          <div class="sample-swatch">
+            
+            <dl>
+              <dt>$font-bold</dt>
+              <dd>600</dd>
+              <dd>line 5</dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+      <section class="sample-section" id="tokens-semantic">
+        <h2>Semantic tokens by context</h2>
+        <p class="sample-note">Each context declares the same custom properties over different reference tokens. Compare them side by side on the <a href="themes.html">themes page</a>.</p>
+        <p class="sample-source">via <b>kth_style_list_tokens</b> · tokenType: semantic · 5 contexts</p>
+        <h3>theme-default</h3>
+        <div class="sample-demo stack">
+          <table class="kth-table">
+            <thead><tr><th>Custom property</th><th>Declared as</th><th>Resolves to</th></tr></thead>
+            <tbody>
+              <tr><td><code>--color-text</code></td><td><code>#{$color-black}</code></td><td>#212121</td></tr>
+              <tr><td><code>--color-text-muted</code></td><td><code>#{$color-gray-dark}</code></td><td>#646464</td></tr>
+              <tr><td><code>--color-background</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-background-alt</code></td><td><code>#{$color-gray-lighter}</code></td><td>#ededed</td></tr>
+              <tr><td><code>--color-header</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-on-header</code></td><td><code>#{$color-blue-marine}</code></td><td>#000061</td></tr>
+              <tr><td><code>--color-primary</code></td><td><code>#{$color-blue-kth}</code></td><td>#004791</td></tr>
+              <tr><td><code>--color-primary-hover</code></td><td><code>#{$color-blue-kth-dark}</code></td><td>#003975</td></tr>
+              <tr><td><code>--color-on-primary</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-secondary</code></td><td><code>#{$color-black}</code></td><td>#212121</td></tr>
+              <tr><td><code>--color-secondary-hover</code></td><td><code>#{$color-black-opacity10}</code></td><td>rgb(33 33 33 / 10%)</td></tr>
+              <tr><td><code>--color-tertiary</code></td><td><code>#{$color-blue-lake}</code></td><td>#036eb8</td></tr>
+              <tr><td><code>--color-error</code></td><td><code>#{$color-red}</code></td><td>#c7321d</td></tr>
+              <tr><td><code>--color-error-hover</code></td><td><code>#{$color-red-dark}</code></td><td>#bf2c17</td></tr>
+              <tr><td><code>--color-success</code></td><td><code>#{$color-green}</code></td><td>#3d784a</td></tr>
+              <tr><td><code>--color-success-hover</code></td><td><code>#{$color-green-dark}</code></td><td>#366f43</td></tr>
+              <tr><td><code>--color-border</code></td><td><code>#{$color-gray-medium}</code></td><td>#a5a5a5</td></tr>
+              <tr><td><code>--color-gray-lightest</code></td><td><code>#{$color-gray-lightest}</code></td><td>#f2f2f2</td></tr>
+              <tr><td><code>--color-gray-lighter</code></td><td><code>#{$color-gray-lighter}</code></td><td>#ededed</td></tr>
+              <tr><td><code>--color-gray-light</code></td><td><code>#{$color-gray-light}</code></td><td>#e6e6e6</td></tr>
+              <tr><td><code>--color-gray-medium</code></td><td><code>#{$color-gray-medium}</code></td><td>#a5a5a5</td></tr>
+              <tr><td><code>--color-gray-dark</code></td><td><code>#{$color-gray-dark}</code></td><td>#646464</td></tr>
+              <tr><td><code>--color-gray-darkest</code></td><td><code>#{$color-gray-darkest}</code></td><td>#323232</td></tr>
+              <tr><td><code>--space-inner-inline</code></td><td><code>#{$space-16}</code></td><td>1rem</td></tr>
+              <tr><td><code>--space-inner-block</code></td><td><code>#{$space-8}</code></td><td>0.5rem</td></tr>
+              <tr><td><code>--space-inner-icon</code></td><td><code>#{$space-8}</code></td><td>0.5rem</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>theme-student-web</h3>
+        <div class="sample-demo stack">
+          <table class="kth-table">
+            <thead><tr><th>Custom property</th><th>Declared as</th><th>Resolves to</th></tr></thead>
+            <tbody>
+              <tr><td><code>--color-text</code></td><td><code>#{$color-black}</code></td><td>#212121</td></tr>
+              <tr><td><code>--color-text-muted</code></td><td><code>#{$color-gray-dark}</code></td><td>#646464</td></tr>
+              <tr><td><code>--color-background</code></td><td><code>#{$color-blue-light}</code></td><td>#def0ff</td></tr>
+              <tr><td><code>--color-background-alt</code></td><td><code>#{$color-gray-lighter}</code></td><td>#ededed</td></tr>
+              <tr><td><code>--color-header</code></td><td><code>#{$color-blue-light}</code></td><td>#def0ff</td></tr>
+              <tr><td><code>--color-on-header</code></td><td><code>#{$color-blue-marine}</code></td><td>#000061</td></tr>
+              <tr><td><code>--color-primary</code></td><td><code>#{$color-blue-kth}</code></td><td>#004791</td></tr>
+              <tr><td><code>--color-primary-hover</code></td><td><code>#{$color-blue-kth-dark}</code></td><td>#003975</td></tr>
+              <tr><td><code>--color-on-primary</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-secondary</code></td><td><code>#{$color-black}</code></td><td>#212121</td></tr>
+              <tr><td><code>--color-secondary-hover</code></td><td><code>#{$color-black-opacity10}</code></td><td>rgb(33 33 33 / 10%)</td></tr>
+              <tr><td><code>--color-tertiary</code></td><td><code>#{$color-blue-lake}</code></td><td>#036eb8</td></tr>
+              <tr><td><code>--color-error</code></td><td><code>#{$color-red-dark}</code></td><td>#bf2c17</td></tr>
+              <tr><td><code>--color-error-hover</code></td><td><code>#{$color-red-darker}</code></td><td>#962312</td></tr>
+              <tr><td><code>--color-success</code></td><td><code>#{$color-green-dark}</code></td><td>#366f43</td></tr>
+              <tr><td><code>--color-success-hover</code></td><td><code>#{$color-green-darker}</code></td><td>#264f30</td></tr>
+              <tr><td><code>--color-border</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-gray-lightest</code></td><td><code>#{$color-gray-lightest}</code></td><td>#f2f2f2</td></tr>
+              <tr><td><code>--color-gray-lighter</code></td><td><code>#{$color-gray-lighter}</code></td><td>#ededed</td></tr>
+              <tr><td><code>--color-gray-light</code></td><td><code>#{$color-gray-light}</code></td><td>#e6e6e6</td></tr>
+              <tr><td><code>--color-gray-medium</code></td><td><code>#{$color-gray-medium}</code></td><td>#a5a5a5</td></tr>
+              <tr><td><code>--color-gray-dark</code></td><td><code>#{$color-gray-dark}</code></td><td>#646464</td></tr>
+              <tr><td><code>--color-gray-darkest</code></td><td><code>#{$color-gray-darkest}</code></td><td>#323232</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>theme-intranet</h3>
+        <div class="sample-demo stack">
+          <table class="kth-table">
+            <thead><tr><th>Custom property</th><th>Declared as</th><th>Resolves to</th></tr></thead>
+            <tbody>
+              <tr><td><code>--color-text</code></td><td><code>#{$color-black}</code></td><td>#212121</td></tr>
+              <tr><td><code>--color-text-muted</code></td><td><code>#{$color-gray-dark}</code></td><td>#646464</td></tr>
+              <tr><td><code>--color-background</code></td><td><code>#{$color-sand}</code></td><td>#ebe5e0</td></tr>
+              <tr><td><code>--color-background-alt</code></td><td><code>#{$color-gray-lightest}</code></td><td>#f2f2f2</td></tr>
+              <tr><td><code>--color-header</code></td><td><code>#{$color-sand}</code></td><td>#ebe5e0</td></tr>
+              <tr><td><code>--color-on-header</code></td><td><code>#{$color-blue-marine}</code></td><td>#000061</td></tr>
+              <tr><td><code>--color-primary</code></td><td><code>#{$color-blue-kth}</code></td><td>#004791</td></tr>
+              <tr><td><code>--color-primary-hover</code></td><td><code>#{$color-blue-kth-dark}</code></td><td>#003975</td></tr>
+              <tr><td><code>--color-on-primary</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-secondary</code></td><td><code>#{$color-black}</code></td><td>#212121</td></tr>
+              <tr><td><code>--color-secondary-hover</code></td><td><code>#{$color-black-opacity10}</code></td><td>rgb(33 33 33 / 10%)</td></tr>
+              <tr><td><code>--color-tertiary</code></td><td><code>#{$color-blue-kth}</code></td><td>#004791</td></tr>
+              <tr><td><code>--color-error</code></td><td><code>#{$color-red-dark}</code></td><td>#bf2c17</td></tr>
+              <tr><td><code>--color-error-hover</code></td><td><code>#{$color-red-darker}</code></td><td>#962312</td></tr>
+              <tr><td><code>--color-success</code></td><td><code>#{$color-green-dark}</code></td><td>#366f43</td></tr>
+              <tr><td><code>--color-success-hover</code></td><td><code>#{$color-green-darker}</code></td><td>#264f30</td></tr>
+              <tr><td><code>--color-border</code></td><td><code>#{$color-gray-medium}</code></td><td>#a5a5a5</td></tr>
+              <tr><td><code>--color-gray-lightest</code></td><td><code>#{$color-gray-lightest}</code></td><td>#f2f2f2</td></tr>
+              <tr><td><code>--color-gray-lighter</code></td><td><code>#{$color-gray-lighter}</code></td><td>#ededed</td></tr>
+              <tr><td><code>--color-gray-light</code></td><td><code>#{$color-gray-light}</code></td><td>#e6e6e6</td></tr>
+              <tr><td><code>--color-gray-medium</code></td><td><code>#{$color-gray-medium}</code></td><td>#a5a5a5</td></tr>
+              <tr><td><code>--color-gray-dark</code></td><td><code>#{$color-gray-dark}</code></td><td>#646464</td></tr>
+              <tr><td><code>--color-gray-darkest</code></td><td><code>#{$color-gray-darkest}</code></td><td>#323232</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>theme-inverse</h3>
+        <div class="sample-demo stack">
+          <table class="kth-table">
+            <thead><tr><th>Custom property</th><th>Declared as</th><th>Resolves to</th></tr></thead>
+            <tbody>
+              <tr><td><code>--color-text</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-text-muted</code></td><td><code>#{$color-gray-lightest}</code></td><td>#f2f2f2</td></tr>
+              <tr><td><code>--color-background</code></td><td><code>#{$color-blue-kth}</code></td><td>#004791</td></tr>
+              <tr><td><code>--color-background-alt</code></td><td><code>#{$color-blue-marine}</code></td><td>#000061</td></tr>
+              <tr><td><code>--color-header</code></td><td><code>#{$color-blue-marine}</code></td><td>#000061</td></tr>
+              <tr><td><code>--color-on-header</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-primary</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-primary-hover</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-on-primary</code></td><td><code>#{$color-blue-kth}</code></td><td>#004791</td></tr>
+              <tr><td><code>--color-secondary</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-secondary-hover</code></td><td><code>#{$color-black-opacity10}</code></td><td>rgb(33 33 33 / 10%)</td></tr>
+              <tr><td><code>--color-tertiary</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-error</code></td><td><code>#{$color-red-light}</code></td><td>#fad6d6</td></tr>
+              <tr><td><code>--color-error-hover</code></td><td><code>#{$color-red-light}</code></td><td>#fad6d6</td></tr>
+              <tr><td><code>--color-success</code></td><td><code>#{$color-green-light}</code></td><td>#d8ffe7</td></tr>
+              <tr><td><code>--color-success-hover</code></td><td><code>#{$color-green-light}</code></td><td>#d8ffe7</td></tr>
+              <tr><td><code>--color-border</code></td><td><code>#{$color-white}</code></td><td>#fcfcfc</td></tr>
+              <tr><td><code>--color-gray-lightest</code></td><td><code>#{$color-gray-lightest}</code></td><td>#f2f2f2</td></tr>
+              <tr><td><code>--color-gray-lighter</code></td><td><code>#{$color-gray-lighter}</code></td><td>#ededed</td></tr>
+              <tr><td><code>--color-gray-light</code></td><td><code>#{$color-gray-light}</code></td><td>#e6e6e6</td></tr>
+              <tr><td><code>--color-gray-medium</code></td><td><code>#{$color-gray-medium}</code></td><td>#a5a5a5</td></tr>
+              <tr><td><code>--color-gray-dark</code></td><td><code>#{$color-gray-dark}</code></td><td>#646464</td></tr>
+              <tr><td><code>--color-gray-darkest</code></td><td><code>#{$color-gray-darkest}</code></td><td>#323232</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>theme-dense</h3>
+        <div class="sample-demo stack">
+          <table class="kth-table">
+            <thead><tr><th>Custom property</th><th>Declared as</th><th>Resolves to</th></tr></thead>
+            <tbody>
+              <tr><td><code>--space-inner-inline</code></td><td><code>#{$space-12}</code></td><td>0.75rem</td></tr>
+              <tr><td><code>--space-inner-block</code></td><td><code>#{$space-4}</code></td><td>0.25rem</td></tr>
+              <tr><td><code>--space-inner-icon</code></td><td><code>#{$space-4}</code></td><td>0.25rem</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="kth-footer">
+  <div class="kth-footer__content sample-shell">
+    <p>Built from live MCP responses against <code>@kth/style 1.14.1</code>, discovered as <code>installed</code>. No value on this page was written by hand.</p>
+    <p>Rebuild with <code>npm run sample</code> while the server is running. Back to the <a href="../index.html">project overview</a>.</p>
+  </div>
+</footer>
+
+<script type="module" src="sample.js"></script>
+</body>
+</html>

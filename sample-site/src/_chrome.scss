@@ -1,0 +1,216 @@
+// Layout for the sample pages themselves.
+//
+// Everything here is prefixed `sample-` so it can never be mistaken for a KTH
+// class, and it is limited to page scaffolding: the components on the pages are
+// styled entirely by @kth/style.
+
+@use "@kth/style/scss/tokens/colors";
+@use "@kth/style/scss/tokens/spacing";
+@use "@kth/style/scss/tokens/typography";
+@use "@kth/style/scss/components/details";
+
+@layer sample {
+  .sample-main {
+    flex: 1;
+    width: 100%;
+  }
+
+  .sample-shell {
+    width: min(100% - #{spacing.$space-32}, 68rem);
+    margin-inline: auto;
+    padding-block: spacing.$space-32;
+  }
+
+  .sample-lede {
+    max-width: 44rem;
+    margin-block-end: spacing.$space-24;
+  }
+
+  .sample-lede p {
+    margin-block-start: spacing.$space-12;
+  }
+
+  .sample-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: spacing.$space-8 spacing.$space-16;
+    padding-block: spacing.$space-16;
+    border-block: 1px solid var(--color-background-alt);
+  }
+
+  .sample-section {
+    padding-block: spacing.$space-32;
+    border-block-end: 1px solid var(--color-background-alt);
+  }
+
+  .sample-section > h2 {
+    margin-block-end: spacing.$space-8;
+  }
+
+  .sample-note {
+    color: var(--color-text-muted);
+    max-width: 46rem;
+    margin-block-end: spacing.$space-8;
+  }
+
+  // Provenance line: names the tool whose response produced the block below,
+  // mirroring how the server cites every value it returns.
+  .sample-source {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-block-end: spacing.$space-16;
+    overflow-wrap: anywhere;
+  }
+
+  .sample-source b {
+    color: var(--color-primary);
+    font-weight: typography.$font-bold;
+  }
+
+  .sample-demo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: spacing.$space-16;
+    padding: spacing.$space-24;
+    background: var(--color-background-alt);
+    overflow-x: auto;
+  }
+
+  .sample-demo.stack {
+    display: block;
+  }
+
+  .sample-demo.stack > * + * {
+    margin-block-start: spacing.$space-16;
+  }
+
+  .sample-demo pre {
+    margin: 0;
+    overflow-x: auto;
+  }
+
+  .sample-icon-field {
+    color: var(--color-primary);
+  }
+
+  .sample-grid {
+    display: grid;
+    gap: spacing.$space-16;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  }
+
+  .sample-grid--spaced {
+    margin-block-start: spacing.$space-16;
+  }
+
+  .sample-swatch {
+    border: 1px solid var(--color-background-alt);
+    background: var(--color-background);
+  }
+
+  .sample-swatch .chip {
+    height: 3.5rem;
+  }
+
+  .sample-swatch .chip.logo {
+    display: grid;
+    place-items: center;
+    background: var(--color-background-alt);
+  }
+
+  .sample-swatch .chip.logo.on-primary {
+    background: var(--color-primary);
+  }
+
+  .sample-swatch dl {
+    margin: 0;
+    padding: spacing.$space-8 spacing.$space-12;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+  }
+
+  .sample-swatch dd {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .sample-icons {
+    display: grid;
+    gap: spacing.$space-16;
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  }
+
+  .sample-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: spacing.$space-8;
+    padding: spacing.$space-12;
+    border: 1px solid var(--color-background-alt);
+    background: var(--color-background);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  // Theme panels: each opts into one package context, so the same markup can be
+  // compared across every context the server resolves.
+  .sample-theme {
+    padding: spacing.$space-24;
+    border: 1px solid var(--color-background-alt);
+    color: var(--color-text);
+    background: var(--color-background);
+  }
+
+  .sample-theme > * + * {
+    margin-block-start: spacing.$space-16;
+  }
+
+  .sample-theme.default {
+    @include colors.theme-default;
+    @include spacing.theme-default;
+  }
+
+  .sample-theme.intranet {
+    @include colors.theme-intranet;
+    @include spacing.theme-default;
+  }
+
+  .sample-theme.student-web {
+    @include colors.theme-student-web;
+    @include spacing.theme-default;
+  }
+
+  .sample-theme.inverse {
+    @include colors.theme-inverse;
+    @include spacing.theme-default;
+  }
+
+  // "dense" is a spacing context, not a colour one.
+  .sample-theme.dense {
+    @include colors.theme-default;
+    @include spacing.theme-dense;
+  }
+
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.85em;
+  }
+
+  // The docs site applies the details mixin to bare <details>; do the same so
+  // both the class-based and element-based forms are visible.
+  details.sample-details {
+    @include details.details;
+  }
+}
+
+@layer sample {
+  .sample-icon.broken {
+    border-color: var(--color-error);
+    color: var(--color-error);
+  }
+}

@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Icons — kth-style-mcp sample site</title>
+<meta name="description" content="Every component, token, theme and icon that kth-style-mcp serves, rendered from live MCP responses.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="kth-a11y-nav" href="#main">Skip to main content</a>
+
+<div class="kth-kpm">
+  <div class="kth-entrances">
+    <ul>
+      <li><a href="../index.html">kth-style-mcp</a></li>
+      <li><a href="https://github.com/KTH/style">@kth/style</a></li>
+    </ul>
+  </div>
+</div>
+
+<header class="kth-header">
+  <div class="kth-header__container">
+    <a href="index.html" class="kth-logotype">
+      <figure>
+        <img alt="KTH" width="64" height="64" src="assets/logotype-blue.svg">
+      </figure>
+    </a>
+
+    <nav class="kth-mega-menu" aria-label="Sample site">
+      <ul>
+        <li>
+          <a href="#" data-id="demo-panel" class="kth-menu-item dropdown">Menu panel</a>
+          <dialog class="kth-menu-panel">
+            <div class="kth-menu-panel__container">
+              <div class="kth-menu-panel__header">
+                <div>
+                  <h2>Menu panel</h2>
+                  <a href="components.html#menu-panel">About this component</a>
+                </div>
+                <button class="kth-icon-button close">
+                  <span class="kth-visually-hidden">Close</span>
+                </button>
+              </div>
+              <div class="kth-menu-panel__content">
+                <p>A non-modal <code>&lt;dialog&gt;</code> opened by <code>MenuPanel.init()</code>. It closes on Escape, on an outside click, and when focus leaves the header.</p>
+              </div>
+            </div>
+          </dialog>
+        </li>
+      </ul>
+    </nav>
+
+    <ul class="kth-header__tools">
+      <li>
+        <button class="kth-menu-item search">Search</button>
+        <dialog class="kth-menu-panel">
+          <div class="kth-menu-panel__container search">
+            <button class="kth-icon-button close">
+              <span class="kth-visually-hidden">Close</span>
+            </button>
+            <div class="kth-menu-panel__content search">
+              <form action="#" method="get" onsubmit="return false">
+                <div class="kth-search">
+                  <label for="site-search">Search this sample</label>
+                  <input type="text" id="site-search" name="q" autocomplete="off">
+                  <button type="submit"><span class="kth-visually-hidden">Search</span></button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </dialog>
+      </li>
+      <li>
+        <a href="#" class="kth-menu-item language" lang="sv">Svenska</a>
+        <dialog class="kth-translation">
+          <button class="kth-icon-button close">
+            <span class="kth-visually-hidden">Close</span>
+          </button>
+          <h2>Byt språk</h2>
+          <p>Opened by <code>MenuPanel.initTranslationModal()</code>, which only intercepts the click when the trigger has no <code>href</code> of its own.</p>
+        </dialog>
+      </li>
+    </ul>
+
+    <button class="kth-menu-item menu collapsable">Menu</button>
+
+    <nav class="kth-mega-menu--collapsable" aria-label="Sample site, mobile">
+      <dialog class="kth-mobile-menu">
+        <button class="kth-icon-button close">
+          <span class="kth-visually-hidden">Close</span>
+        </button>
+        <ul>
+          <li><a href="index.html">Overview</a></li>
+          <li><a href="components.html">Components</a></li>
+          <li><a href="themes.html">Themes</a></li>
+          <li><a href="tokens.html">Tokens</a></li>
+          <li><a href="icons.html">Icons</a></li>
+        </ul>
+      </dialog>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="sample-main">
+  <div class="kth-content">
+    <div class="sample-shell">
+      <nav class="kth-breadcrumbs" aria-label="Breadcrumbs">
+        <ol>
+          <li><a href="../index.html">kth-style-mcp</a></li>
+          <li><a href="index.html">Sample site</a></li>
+          <li>Icons</li>
+        </ol>
+      </nav>
+
+      <div class="sample-lede">
+        <h1>Icons</h1>
+        <p>Icons are colourless by design: each is a mask on a pseudo-element, so it takes the colour you set. Every icon below is drawn with the mixin the server named for it, and the logotype files were written straight from <code>get_icon</code> responses.</p>
+      </div>
+
+      <nav class="sample-nav" aria-label="Sample pages">
+          <a class="kth-menu-item" href="index.html">Overview</a>
+          <a class="kth-menu-item" href="components.html">Components</a>
+          <a class="kth-menu-item" href="themes.html">Themes</a>
+          <a class="kth-menu-item" href="tokens.html">Tokens</a>
+          <a class="kth-menu-item dropdown" href="icons.html" aria-current="page">Icons</a>
+      </nav>
+
+      <section class="sample-section" id="icon-mixins">
+        <h2>Icon mixins (28)</h2>
+        <p class="sample-note">Apply the mixin on a pseudo-element and set <code>background-color</code>, exactly as the package components do. <code>icon-new-window</code> is published by the package but references a raw variable that does not exist, so it cannot compile in any project — it is marked below rather than hidden.</p>
+        <p class="sample-source">via <b>search_icons</b> · 28 icon mixins</p>
+        <div class="sample-demo stack sample-icon-field"><div class="sample-icons">
+          <div class="sample-icon">
+            <span class="sample-icon-arrow-back" aria-hidden="true"></span>
+            <span>arrow-back</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-arrow-back-500" aria-hidden="true"></span>
+            <span>arrow-back-500</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-arrow-forward" aria-hidden="true"></span>
+            <span>arrow-forward</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-arrow-forward-500" aria-hidden="true"></span>
+            <span>arrow-forward-500</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-card-view" aria-hidden="true"></span>
+            <span>card-view</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-caret-down" aria-hidden="true"></span>
+            <span>caret-down</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-caret-right" aria-hidden="true"></span>
+            <span>caret-right</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-caret-right-big" aria-hidden="true"></span>
+            <span>caret-right-big</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-check-500" aria-hidden="true"></span>
+            <span>check-500</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-close" aria-hidden="true"></span>
+            <span>close</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-filter" aria-hidden="true"></span>
+            <span>filter</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-filter-off" aria-hidden="true"></span>
+            <span>filter-off</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-home" aria-hidden="true"></span>
+            <span>home</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-info-500" aria-hidden="true"></span>
+            <span>info-500</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-input-checkbox" aria-hidden="true"></span>
+            <span>input-checkbox</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-language" aria-hidden="true"></span>
+            <span>language</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-list-view" aria-hidden="true"></span>
+            <span>list-view</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-menu" aria-hidden="true"></span>
+            <span>menu</span>
+          </div>
+          <div class="sample-icon broken">
+            <span aria-hidden="true">!</span>
+            <span>new-window</span>
+            <span>does not compile</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-new-window-500" aria-hidden="true"></span>
+            <span>new-window-500</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-pdf" aria-hidden="true"></span>
+            <span>pdf</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-schedule" aria-hidden="true"></span>
+            <span>schedule</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-search" aria-hidden="true"></span>
+            <span>search</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-sort-asc" aria-hidden="true"></span>
+            <span>sort-asc</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-sort-desc" aria-hidden="true"></span>
+            <span>sort-desc</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-sort-unsorted" aria-hidden="true"></span>
+            <span>sort-unsorted</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-spinner" aria-hidden="true"></span>
+            <span>spinner</span>
+          </div>
+          <div class="sample-icon">
+            <span class="sample-icon-warning-500" aria-hidden="true"></span>
+            <span>warning-500</span>
+          </div>
+        </div></div>
+      </section>
+      <section class="sample-section" id="logotypes">
+        <h2>Logotypes (2)</h2>
+        <p class="sample-note">Shipped as SVG assets rather than mixins. <code>get_icon</code> returns the SVG content itself, which is how these files got here.</p>
+        <p class="sample-source">via <b>get_icon</b> · 2 assets</p>
+        <div class="sample-grid">
+          <div class="sample-swatch">
+            <div class="chip logo ">
+              <img src="assets/logotype-blue.svg" alt="logotype-blue" height="40">
+            </div>
+            <dl><dt>logotype-blue</dt><dd>assets/logotype/logotype-blue.svg</dd></dl>
+          </div>
+          <div class="sample-swatch">
+            <div class="chip logo on-primary">
+              <img src="assets/logotype-white.svg" alt="logotype-white" height="40">
+            </div>
+            <dl><dt>logotype-white</dt><dd>assets/logotype/logotype-white.svg</dd></dl>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="kth-footer">
+  <div class="kth-footer__content sample-shell">
+    <p>Built from live MCP responses against <code>@kth/style 1.14.1</code>, discovered as <code>installed</code>. No value on this page was written by hand.</p>
+    <p>Rebuild with <code>npm run sample</code> while the server is running. Back to the <a href="../index.html">project overview</a>.</p>
+  </div>
+</footer>
+
+<script type="module" src="sample.js"></script>
+</body>
+</html>
