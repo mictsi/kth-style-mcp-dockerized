@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Navigation and chrome — kth-style-mcp sample site</title>
+<meta name="description" content="Every component, token, theme and icon that kth-style-mcp serves, rendered from live MCP responses.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="kth-a11y-nav" href="#main">Skip to main content</a>
+
+<div class="kth-kpm">
+  <div class="kth-entrances">
+    <ul>
+      <li><a href="../index.html">kth-style-mcp</a></li>
+      <li><a href="https://github.com/KTH/style">@kth/style</a></li>
+    </ul>
+  </div>
+</div>
+
+<header class="kth-header">
+  <div class="kth-header__container">
+    <a href="index.html" class="kth-logotype">
+      <figure>
+        <img alt="KTH" width="64" height="64" src="assets/logotype-blue.svg">
+      </figure>
+    </a>
+
+    <nav class="kth-mega-menu" aria-label="Sample site">
+      <ul>
+        <li>
+          <a class="kth-menu-item" href="index.html">Overview</a>
+        </li>
+        <li>
+          <button class="kth-menu-item dropdown" data-id="nav-components" aria-current="true">Components</button>
+          <dialog class="kth-menu-panel" data-id="nav-components">
+            <div class="kth-menu-panel__container">
+              <div class="kth-menu-panel__header">
+                <div>
+                  <h2>Components</h2>
+                  <p>Every component the server publishes, grouped by what you are building.</p>
+                </div>
+                <button class="kth-icon-button close">
+                  <span class="kth-visually-hidden">Close</span>
+                </button>
+              </div>
+              <div class="kth-menu-panel__content">
+                <ul class="sample-panel-links">
+                <li>
+                  <a href="components-navigation.html" aria-current="page">Navigation and chrome</a>
+                  <p>The page frame: the header and its dialogs, the logotype, breadcrumbs, local navigation and the footer.</p>
+                </li>
+                <li>
+                  <a href="components-forms.html">Forms and actions</a>
+                  <p>Everything a person clicks or types into.</p>
+                </li>
+                <li>
+                  <a href="components-content.html">Content and feedback</a>
+                  <p>Layout containers, tabular data, disclosure widgets and messages.</p>
+                </li>
+                </ul>
+              </div>
+            </div>
+          </dialog>
+        </li>
+        <li>
+          <a class="kth-menu-item" href="themes.html">Themes</a>
+        </li>
+        <li>
+          <a class="kth-menu-item" href="tokens.html">Tokens</a>
+        </li>
+        <li>
+          <a class="kth-menu-item" href="icons.html">Icons</a>
+        </li>
+      </ul>
+    </nav>
+
+    <ul class="kth-header__tools">
+      <li>
+        <button class="kth-menu-item search">Search</button>
+        <dialog class="kth-menu-panel">
+          <div class="kth-menu-panel__container search">
+            <button class="kth-icon-button close">
+              <span class="kth-visually-hidden">Close</span>
+            </button>
+            <div class="kth-menu-panel__content search">
+              <form action="#" method="get" onsubmit="return false">
+                <div class="kth-search">
+                  <label for="site-search">Search this sample</label>
+                  <input type="text" id="site-search" name="q" autocomplete="off">
+                  <button type="submit"><span class="kth-visually-hidden">Search</span></button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </dialog>
+      </li>
+      <li>
+        <!-- No href: initTranslationModal only opens the dialog when the
+             trigger has nothing to navigate to. -->
+        <button class="kth-menu-item language" lang="sv">Svenska</button>
+        <dialog class="kth-translation">
+          <button class="kth-icon-button close">
+            <span class="kth-visually-hidden">Close</span>
+          </button>
+          <h2>Byt språk</h2>
+          <p>Opened by <code>MenuPanel.initTranslationModal()</code>. Give the trigger an <code>href</code> and it navigates instead of opening — that is the documented behaviour, and it is why this one is a button.</p>
+        </dialog>
+      </li>
+    </ul>
+
+    <button class="kth-menu-item menu collapsable">Menu</button>
+
+    <nav class="kth-mega-menu--collapsable" aria-label="Sample site, mobile">
+      <dialog class="kth-mobile-menu">
+        <button class="kth-icon-button close">
+          <span class="kth-visually-hidden">Close</span>
+        </button>
+        <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="components-navigation.html" aria-current="page">Navigation and chrome</a></li>
+            <li><a href="components-forms.html">Forms and actions</a></li>
+            <li><a href="components-content.html">Content and feedback</a></li>
+            <li><a href="themes.html">Themes</a></li>
+            <li><a href="tokens.html">Tokens</a></li>
+            <li><a href="icons.html">Icons</a></li>
+        </ul>
+      </dialog>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="sample-main">
+  <div class="kth-content">
+    <div class="sample-shell">
+      <nav class="kth-breadcrumbs" aria-label="Breadcrumbs">
+        <ol>
+          <li><a href="../index.html">kth-style-mcp</a></li>
+          <li><a href="index.html">Sample site</a></li>
+          <li>Navigation and chrome</li>
+        </ol>
+      </nav>
+
+      <div class="sample-lede">
+        <h1>Navigation and chrome</h1>
+        <p>The page frame: the header and its dialogs, the logotype, breadcrumbs, local navigation and the footer. 12 of the 23 components the server lists for <code>@kth/style 1.14.1</code>. Each import path and class list below is what <code>kth_style_list_components</code> returned for that component.</p>
+      </div>
+
+      <div class="sample-layout">
+      <nav class="kth-local-navigation" aria-label="On this page">
+        <ul>
+            <li><a href="#a11y-nav">a11y-nav</a></li>
+            <li><a href="#kpm">kpm</a></li>
+            <li><a href="#header">header</a></li>
+            <li><a href="#logotype">logotype</a></li>
+            <li><a href="#mega-menu">mega-menu</a></li>
+            <li><a href="#menu-item">menu-item</a></li>
+            <li><a href="#menu-panel">menu-panel</a></li>
+            <li><a href="#mobile-menu">mobile-menu</a></li>
+            <li><a href="#translation-panel">translation-panel</a></li>
+            <li><a href="#breadcrumbs">breadcrumbs</a></li>
+            <li><a href="#local-navigation">local-navigation</a></li>
+            <li><a href="#footer">footer</a></li>
+        </ul>
+      </nav>
+        <div class="sample-body">
+
+      <section class="sample-section" id="a11y-nav">
+        <h2>a11y-nav</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/a11y-nav"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/a11y-nav.scss · .kth-a11y-nav</p>
+        <div class="sample-demo stack">
+          <p>The skip link at the very top of this page is <code>.kth-a11y-nav</code>. Press <kbd>Tab</kbd> from the address bar to reveal it.</p>
+        </div>
+      </section>
+
+      <section class="sample-section" id="kpm">
+        <h2>kpm</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/kpm"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/kpm.scss · .kth-entrances .kth-entrances-expandable .kth-kpm</p>
+        <div class="sample-demo stack">
+          <p>The bar pinned above the header is <code>.kth-kpm</code>. The package reset reserves <code>2.5rem</code> of top margin on <code>body</code> for it.</p>
+        </div>
+      </section>
+
+      <section class="sample-section" id="header">
+        <h2>header</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/header"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/header.scss · .kth-header</p>
+        <div class="sample-demo stack">
+          <p>The header at the top of this page is the live component, wired with <code>MenuPanel</code>. Open the menu panel, the search panel and the language dialog to see all three dialog behaviours.</p>
+        </div>
+      </section>
+
+      <section class="sample-section" id="logotype">
+        <h2>logotype</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/logotype"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/logotype.scss · .kth-logotype</p>
+        <div class="sample-demo">
+          <a href="index.html" class="kth-logotype">
+            <figure><img alt="KTH" width="64" height="64" src="assets/logotype-blue.svg"></figure>
+          </a>
+        </div>
+      </section>
+
+      <section class="sample-section" id="mega-menu">
+        <h2>mega-menu</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/mega-menu"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/mega-menu.scss · .kth-mega-menu .kth-mega-menu--collapsable</p>
+        <div class="sample-demo stack">
+          <p>The horizontal navigation inside the header is <code>.kth-mega-menu</code>; its collapsed sibling <code>.kth-mega-menu--collapsable</code> holds the mobile dialog. Narrow the window to swap between them.</p>
+        </div>
+      </section>
+
+      <section class="sample-section" id="menu-item">
+        <h2>menu-item</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/menu-item"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/menu-item.scss · .kth-menu-item</p>
+        <div class="sample-demo">
+          <button class="kth-menu-item">Plain</button>
+          <button class="kth-menu-item dropdown">Dropdown</button>
+          <button class="kth-menu-item search">Search</button>
+          <button class="kth-menu-item menu">Menu</button>
+          <button class="kth-menu-item language">Svenska</button>
+        </div>
+      </section>
+
+      <section class="sample-section" id="menu-panel">
+        <h2>menu-panel</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/menu-panel"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/menu-panel.scss · .kth-icon-button .kth-menu-panel</p>
+        <div class="sample-demo stack">
+          <p>Open "Menu panel" or "Search" in the header. Both are <code>.kth-menu-panel</code> dialogs opened by <code>MenuPanel.init()</code>.</p>
+        </div>
+      </section>
+
+      <section class="sample-section" id="mobile-menu">
+        <h2>mobile-menu</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/mobile-menu"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/mobile-menu.scss · .kth-icon-button .kth-mobile-menu .kth-mobile-menu__item .kth-mobile-menu__items</p>
+        <div class="sample-demo stack">
+          <p>Narrow the window until the "Menu" button appears, then open it. That modal is <code>.kth-mobile-menu</code>, opened by <code>MenuPanel.initModal()</code>.</p>
+        </div>
+      </section>
+
+      <section class="sample-section" id="translation-panel">
+        <h2>translation-panel</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/translation-panel"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/translation-panel.scss · .kth-icon-button .kth-translation</p>
+        <div class="sample-demo stack">
+          <p>Open "Svenska" in the header. The dialog is <code>.kth-translation</code>; its stylesheet pins the default colour theme so the panel looks the same in every context.</p>
+        </div>
+      </section>
+
+      <section class="sample-section" id="breadcrumbs">
+        <h2>breadcrumbs</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/breadcrumbs"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/breadcrumbs.scss · .kth-breadcrumbs</p>
+        <div class="sample-demo">
+          <nav class="kth-breadcrumbs" aria-label="Example">
+            <ol>
+              <li><a href="index.html">Sample site</a></li>
+              <li><a href="components-navigation.html">Navigation and chrome</a></li>
+              <li>Components</li>
+            </ol>
+          </nav>
+        </div>
+      </section>
+
+      <section class="sample-section" id="local-navigation">
+        <h2>local-navigation</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/local-navigation"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/local-navigation.scss · .kth-button .kth-local-navigation .kth-local-navigation--mobile .kth-local-navigation--mobile__submenu .kth-local-navigation__submenu .kth-main-content</p>
+        <div class="sample-demo">
+          <nav class="kth-local-navigation" aria-label="Local, example">
+            <ul>
+              <li><a href="#local-navigation" aria-current="page">This component</a></li>
+              <li class="expandable">
+                <a href="#header">Header</a>
+                <ul>
+                  <li><a href="#mega-menu">Mega menu</a></li>
+                  <li><a href="#menu-panel">Menu panel</a></li>
+                </ul>
+              </li>
+              <li><a href="#footer">Footer</a></li>
+            </ul>
+          </nav>
+        </div>
+      </section>
+
+      <section class="sample-section" id="footer">
+        <h2>footer</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/footer"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/footer.scss · .kth-footer</p>
+        <div class="sample-demo stack">
+          <p>The footer at the bottom of this page is the live component.</p>
+        </div>
+      </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="kth-footer">
+  <div class="kth-footer__content sample-shell">
+    <p>Built from live MCP responses against <code>@kth/style 1.14.1</code>, discovered as <code>installed</code>. No value on this page was written by hand.</p>
+    <p>Rebuild with <code>npm run sample</code> while the server is running. Back to the <a href="../index.html">project overview</a>.</p>
+  </div>
+</footer>
+
+<script type="module" src="sample.js"></script>
+</body>
+</html>

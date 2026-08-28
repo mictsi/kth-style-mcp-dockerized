@@ -30,12 +30,45 @@
     margin-block-start: spacing.$space-12;
   }
 
-  .sample-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: spacing.$space-8 spacing.$space-16;
-    padding-block: spacing.$space-16;
-    border-block: 1px solid var(--color-background-alt);
+  // Two columns: the package's local-navigation beside the demos. It collapses
+  // to a single column before the navigation would get too narrow to read.
+  .sample-layout {
+    display: grid;
+    gap: spacing.$space-32;
+    align-items: start;
+  }
+
+  @media (min-width: 60rem) {
+    .sample-layout {
+      grid-template-columns: 15rem minmax(0, 1fr);
+    }
+
+    .sample-layout > .kth-local-navigation {
+      position: sticky;
+      top: spacing.$space-16;
+    }
+  }
+
+  .sample-body {
+    min-width: 0;
+  }
+
+  // Link list inside a header menu panel.
+  .sample-panel-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: spacing.$space-16;
+  }
+
+  .sample-panel-links a {
+    @include typography.font-heading-xs;
+  }
+
+  .sample-panel-links p {
+    margin-block-start: spacing.$space-4;
+    color: var(--color-text-muted);
   }
 
   .sample-section {

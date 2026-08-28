@@ -42,6 +42,9 @@ GET  /kth-style-mcp/sample-site/    sample site
 everything else                     404
 ```
 
+The site is copied into the image at build time, so after `npm run sample` run
+`./run.sh run --build` to publish the regenerated pages.
+
 The container serves the landing page and the sample site itself, so a deployment
 publishes one URL and everything lives under it. `GET /kth-style-mcp` redirects to
 `/kth-style-mcp/` so the pages' relative links resolve. Nothing else in the

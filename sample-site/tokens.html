@@ -34,23 +34,48 @@
     <nav class="kth-mega-menu" aria-label="Sample site">
       <ul>
         <li>
-          <a href="#" data-id="demo-panel" class="kth-menu-item dropdown">Menu panel</a>
-          <dialog class="kth-menu-panel">
+          <a class="kth-menu-item" href="index.html">Overview</a>
+        </li>
+        <li>
+          <button class="kth-menu-item dropdown" data-id="nav-components">Components</button>
+          <dialog class="kth-menu-panel" data-id="nav-components">
             <div class="kth-menu-panel__container">
               <div class="kth-menu-panel__header">
                 <div>
-                  <h2>Menu panel</h2>
-                  <a href="components.html#menu-panel">About this component</a>
+                  <h2>Components</h2>
+                  <p>Every component the server publishes, grouped by what you are building.</p>
                 </div>
                 <button class="kth-icon-button close">
                   <span class="kth-visually-hidden">Close</span>
                 </button>
               </div>
               <div class="kth-menu-panel__content">
-                <p>A non-modal <code>&lt;dialog&gt;</code> opened by <code>MenuPanel.init()</code>. It closes on Escape, on an outside click, and when focus leaves the header.</p>
+                <ul class="sample-panel-links">
+                <li>
+                  <a href="components-navigation.html">Navigation and chrome</a>
+                  <p>The page frame: the header and its dialogs, the logotype, breadcrumbs, local navigation and the footer.</p>
+                </li>
+                <li>
+                  <a href="components-forms.html">Forms and actions</a>
+                  <p>Everything a person clicks or types into.</p>
+                </li>
+                <li>
+                  <a href="components-content.html">Content and feedback</a>
+                  <p>Layout containers, tabular data, disclosure widgets and messages.</p>
+                </li>
+                </ul>
               </div>
             </div>
           </dialog>
+        </li>
+        <li>
+          <a class="kth-menu-item" href="themes.html">Themes</a>
+        </li>
+        <li>
+          <a class="kth-menu-item" href="tokens.html" aria-current="page">Tokens</a>
+        </li>
+        <li>
+          <a class="kth-menu-item" href="icons.html">Icons</a>
         </li>
       </ul>
     </nav>
@@ -76,13 +101,15 @@
         </dialog>
       </li>
       <li>
-        <a href="#" class="kth-menu-item language" lang="sv">Svenska</a>
+        <!-- No href: initTranslationModal only opens the dialog when the
+             trigger has nothing to navigate to. -->
+        <button class="kth-menu-item language" lang="sv">Svenska</button>
         <dialog class="kth-translation">
           <button class="kth-icon-button close">
             <span class="kth-visually-hidden">Close</span>
           </button>
           <h2>Byt språk</h2>
-          <p>Opened by <code>MenuPanel.initTranslationModal()</code>, which only intercepts the click when the trigger has no <code>href</code> of its own.</p>
+          <p>Opened by <code>MenuPanel.initTranslationModal()</code>. Give the trigger an <code>href</code> and it navigates instead of opening — that is the documented behaviour, and it is why this one is a button.</p>
         </dialog>
       </li>
     </ul>
@@ -95,11 +122,13 @@
           <span class="kth-visually-hidden">Close</span>
         </button>
         <ul>
-          <li><a href="index.html">Overview</a></li>
-          <li><a href="components.html">Components</a></li>
-          <li><a href="themes.html">Themes</a></li>
-          <li><a href="tokens.html">Tokens</a></li>
-          <li><a href="icons.html">Icons</a></li>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="components-navigation.html">Navigation and chrome</a></li>
+            <li><a href="components-forms.html">Forms and actions</a></li>
+            <li><a href="components-content.html">Content and feedback</a></li>
+            <li><a href="themes.html">Themes</a></li>
+            <li><a href="tokens.html" aria-current="page">Tokens</a></li>
+            <li><a href="icons.html">Icons</a></li>
         </ul>
       </dialog>
     </nav>
@@ -122,13 +151,16 @@
         <p>42 reference tokens and 98 semantic tokens, exactly as the server returns them — including the line each one was parsed from. This is what an agent reads instead of guessing a hex value.</p>
       </div>
 
-      <nav class="sample-nav" aria-label="Sample pages">
-          <a class="kth-menu-item" href="index.html">Overview</a>
-          <a class="kth-menu-item" href="components.html">Components</a>
-          <a class="kth-menu-item" href="themes.html">Themes</a>
-          <a class="kth-menu-item dropdown" href="tokens.html" aria-current="page">Tokens</a>
-          <a class="kth-menu-item" href="icons.html">Icons</a>
+      <div class="sample-layout">
+      <nav class="kth-local-navigation" aria-label="On this page">
+        <ul>
+            <li><a href="#tokens-colors">Colour</a></li>
+            <li><a href="#tokens-spacing">Spacing</a></li>
+            <li><a href="#tokens-typography">Typography</a></li>
+            <li><a href="#tokens-semantic">Semantic by context</a></li>
+        </ul>
       </nav>
+        <div class="sample-body">
 
       <section class="sample-section" id="tokens-colors">
         <h2>Colour</h2>
@@ -632,6 +664,8 @@
           </table>
         </div>
       </section>
+        </div>
+      </div>
     </div>
   </div>
 </main>

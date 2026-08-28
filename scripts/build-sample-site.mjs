@@ -29,13 +29,62 @@ const SRC = path.join(SITE, 'src')
 const ASSETS = path.join(SITE, 'assets')
 const MCP_URL = process.env.MCP_URL ?? 'http://127.0.0.1:8888/mcp'
 
-const PAGES = [
-  ['index.html', 'Overview'],
-  ['components.html', 'Components'],
-  ['themes.html', 'Themes'],
-  ['tokens.html', 'Tokens'],
-  ['icons.html', 'Icons'],
+/**
+ * Component pages are grouped by what a developer is doing, not by file name,
+ * so the header navigation has real destinations to move between. Any component
+ * the server reports that is not named here is appended to the content page, so
+ * a new release cannot go undisplayed.
+ */
+const COMPONENT_GROUPS = [
+  {
+    file: 'components-navigation.html',
+    label: 'Navigation and chrome',
+    blurb: 'The page frame: the header and its dialogs, the logotype, breadcrumbs, local navigation and the footer.',
+    names: [
+      'a11y-nav',
+      'kpm',
+      'header',
+      'logotype',
+      'mega-menu',
+      'menu-item',
+      'menu-panel',
+      'mobile-menu',
+      'translation-panel',
+      'breadcrumbs',
+      'local-navigation',
+      'footer',
+    ],
+  },
+  {
+    file: 'components-forms.html',
+    label: 'Forms and actions',
+    blurb: 'Everything a person clicks or types into.',
+    names: ['button', 'icon-button', 'input', 'search'],
+  },
+  {
+    file: 'components-content.html',
+    label: 'Content and feedback',
+    blurb: 'Layout containers, tabular data, disclosure widgets and messages.',
+    names: ['content', 'table', 'tabs', 'accordion', 'details', 'alert', 'visually-hidden'],
+  },
 ]
+
+/** Top-level navigation. A group with children opens a menu panel; a plain entry is a link. */
+const NAV = [
+  { file: 'index.html', label: 'Overview' },
+  {
+    label: 'Components',
+    id: 'nav-components',
+    intro: 'Every component the server publishes, grouped by what you are building.',
+    children: COMPONENT_GROUPS.map((group) => ({ file: group.file, label: group.label, blurb: group.blurb })),
+  },
+  { file: 'themes.html', label: 'Themes' },
+  { file: 'tokens.html', label: 'Tokens' },
+  { file: 'icons.html', label: 'Icons' },
+]
+
+/** Flattened, for the mobile menu and for link checking. */
+const ALL_PAGES = NAV.flatMap((entry) => (entry.children ? entry.children : [entry]))
 
 // ---------------------------------------------------------------------------
 // MCP client
@@ -114,11 +163,75 @@ const section = (id, title, note, body, provenance = '') => `
         ${body}
       </section>`
 
-function layout({ page, title, lede, body, pkg }) {
-  const nav = PAGES.map(
-    ([href, label]) =>
-      `<a class="kth-menu-item${href === page ? ' dropdown' : ''}" href="${href}"${href === page ? ' aria-current="page"' : ''}>${label}</a>`
-  ).join('\n          ')
+function navMarkup(page) {
+  return NAV.map((entry) => {
+    if (!entry.children) {
+      const current = entry.file === page
+      return `        <li>
+          <a class="kth-menu-item" href="${entry.file}"${current ? ' aria-current="page"' : ''}>${escape(entry.label)}</a>
+        </li>`
+    }
+
+    const active = entry.children.some((child) => child.file === page)
+    const links = entry.children
+      .map(
+        (child) => `                <li>
+                  <a href="${child.file}"${child.file === page ? ' aria-current="page"' : ''}>${escape(child.label)}</a>
+                  <p>${escape(child.blurb)}</p>
+                </li>`
+      )
+      .join('\n')
+
+    // A menu item followed by a <dialog> sibling is what MenuPanel.init pairs up.
+    return `        <li>
+          <button class="kth-menu-item dropdown" data-id="${entry.id}"${active ? ' aria-current="true"' : ''}>${escape(entry.label)}</button>
+          <dialog class="kth-menu-panel" data-id="${entry.id}">
+            <div class="kth-menu-panel__container">
+              <div class="kth-menu-panel__header">
+                <div>
+                  <h2>${escape(entry.label)}</h2>
+                  <p>${escape(entry.intro)}</p>
+                </div>
+                <button class="kth-icon-button close">
+                  <span class="kth-visually-hidden">Close</span>
+                </button>
+              </div>
+              <div class="kth-menu-panel__content">
+                <ul class="sample-panel-links">
+${links}
+                </ul>
+              </div>
+            </div>
+          </dialog>
+        </li>`
+  }).join('\n')
+}
+
+function mobileNavMarkup(page) {
+  return ALL_PAGES.map(
+    (entry) =>
+      `            <li><a href="${entry.file}"${entry.file === page ? ' aria-current="page"' : ''}>${escape(entry.label)}</a></li>`
+  ).join('\n')
+}
+
+/** In-page navigation, using the package's own local-navigation component. */
+function localNavMarkup(sections) {
+  if (!sections?.length) {
+    return ''
+  }
+  const items = sections
+    .map((section) => `            <li><a href="#${escape(section.id)}">${escape(section.label)}</a></li>`)
+    .join('\n')
+
+  return `      <nav class="kth-local-navigation" aria-label="On this page">
+        <ul>
+${items}
+        </ul>
+      </nav>`
+}
+
+function layout({ page, title, lede, body, pkg, sections }) {
+  const localNav = localNavMarkup(sections)
 
   return `<!doctype html>
 <html lang="en">
@@ -155,25 +268,7 @@ function layout({ page, title, lede, body, pkg }) {
 
     <nav class="kth-mega-menu" aria-label="Sample site">
       <ul>
-        <li>
-          <a href="#" data-id="demo-panel" class="kth-menu-item dropdown">Menu panel</a>
-          <dialog class="kth-menu-panel">
-            <div class="kth-menu-panel__container">
-              <div class="kth-menu-panel__header">
-                <div>
-                  <h2>Menu panel</h2>
-                  <a href="components.html#menu-panel">About this component</a>
-                </div>
-                <button class="kth-icon-button close">
-                  <span class="kth-visually-hidden">Close</span>
-                </button>
-              </div>
-              <div class="kth-menu-panel__content">
-                <p>A non-modal <code>&lt;dialog&gt;</code> opened by <code>MenuPanel.init()</code>. It closes on Escape, on an outside click, and when focus leaves the header.</p>
-              </div>
-            </div>
-          </dialog>
-        </li>
+${navMarkup(page)}
       </ul>
     </nav>
 
@@ -198,13 +293,15 @@ function layout({ page, title, lede, body, pkg }) {
         </dialog>
       </li>
       <li>
-        <a href="#" class="kth-menu-item language" lang="sv">Svenska</a>
+        <!-- No href: initTranslationModal only opens the dialog when the
+             trigger has nothing to navigate to. -->
+        <button class="kth-menu-item language" lang="sv">Svenska</button>
         <dialog class="kth-translation">
           <button class="kth-icon-button close">
             <span class="kth-visually-hidden">Close</span>
           </button>
           <h2>Byt språk</h2>
-          <p>Opened by <code>MenuPanel.initTranslationModal()</code>, which only intercepts the click when the trigger has no <code>href</code> of its own.</p>
+          <p>Opened by <code>MenuPanel.initTranslationModal()</code>. Give the trigger an <code>href</code> and it navigates instead of opening — that is the documented behaviour, and it is why this one is a button.</p>
         </dialog>
       </li>
     </ul>
@@ -217,7 +314,7 @@ function layout({ page, title, lede, body, pkg }) {
           <span class="kth-visually-hidden">Close</span>
         </button>
         <ul>
-          ${PAGES.map(([href, label]) => `<li><a href="${href}">${label}</a></li>`).join('\n          ')}
+${mobileNavMarkup(page)}
         </ul>
       </dialog>
     </nav>
@@ -240,10 +337,12 @@ function layout({ page, title, lede, body, pkg }) {
         ${lede}
       </div>
 
-      <nav class="sample-nav" aria-label="Sample pages">
-          ${nav}
-      </nav>
+      <div class="sample-layout">
+${localNav}
+        <div class="sample-body">
 ${body}
+        </div>
+      </div>
     </div>
   </div>
 </main>
@@ -376,25 +475,25 @@ const DEMOS = {
   breadcrumbs: `<div class="sample-demo">
           <nav class="kth-breadcrumbs" aria-label="Example">
             <ol>
-              <li><a href="#">KTH</a></li>
-              <li><a href="#">Style</a></li>
+              <li><a href="index.html">Sample site</a></li>
+              <li><a href="components-navigation.html">Navigation and chrome</a></li>
               <li>Components</li>
             </ol>
           </nav>
         </div>`,
 
   'local-navigation': `<div class="sample-demo">
-          <nav class="kth-local-navigation" aria-label="Local">
+          <nav class="kth-local-navigation" aria-label="Local, example">
             <ul>
-              <li><a href="#" aria-current="page">Overview</a></li>
+              <li><a href="#local-navigation" aria-current="page">This component</a></li>
               <li class="expandable">
-                <a href="#">Tokens</a>
+                <a href="#header">Header</a>
                 <ul>
-                  <li><a href="#">Colours</a></li>
-                  <li><a href="#">Spacing</a></li>
+                  <li><a href="#mega-menu">Mega menu</a></li>
+                  <li><a href="#menu-panel">Menu panel</a></li>
                 </ul>
               </li>
-              <li><a href="#">Icons</a></li>
+              <li><a href="#footer">Footer</a></li>
             </ul>
           </nav>
         </div>`,
@@ -404,11 +503,11 @@ const DEMOS = {
           <button class="kth-menu-item dropdown">Dropdown</button>
           <button class="kth-menu-item search">Search</button>
           <button class="kth-menu-item menu">Menu</button>
-          <a class="kth-menu-item language" href="#">Svenska</a>
+          <button class="kth-menu-item language">Svenska</button>
         </div>`,
 
   logotype: `<div class="sample-demo">
-          <a href="#" class="kth-logotype">
+          <a href="index.html" class="kth-logotype">
             <figure><img alt="KTH" width="64" height="64" src="assets/logotype-blue.svg"></figure>
           </a>
         </div>`,
@@ -476,13 +575,33 @@ function componentCard(component) {
 // Pages
 // ---------------------------------------------------------------------------
 
-function buildComponentsPage(data) {
+/** Splits the reported components across the group pages, leaving none behind. */
+function groupComponents(components) {
+  const claimed = new Set(COMPONENT_GROUPS.flatMap((group) => group.names))
+  const byName = new Map(components.map((component) => [component.name, component]))
+  const leftovers = components.filter((component) => !claimed.has(component.name))
+
+  return COMPONENT_GROUPS.map((group, index) => ({
+    ...group,
+    components: [
+      ...group.names.map((name) => byName.get(name)).filter(Boolean),
+      // Anything the package adds later shows up on the last page rather than
+      // vanishing from the site.
+      ...(index === COMPONENT_GROUPS.length - 1 ? leftovers : []),
+    ],
+  }))
+}
+
+function buildComponentPage(group, data) {
+  const sections = group.components.map((component) => ({ id: component.name, label: component.name }))
+
   return layout({
-    page: 'components.html',
-    title: 'Components',
+    page: group.file,
+    title: group.label,
     pkg: data.pkg,
-    lede: `<p>All ${data.components.length} components the server lists for <code>@kth/style ${escape(data.pkg.version)}</code>. The import path and class names under each demo are the ones <code>kth_style_list_components</code> returned for it.</p>`,
-    body: data.components.map(componentCard).join('\n'),
+    sections,
+    lede: `<p>${escape(group.blurb)} ${group.components.length} of the ${data.components.length} components the server lists for <code>@kth/style ${escape(data.pkg.version)}</code>. Each import path and class list below is what <code>kth_style_list_components</code> returned for that component.</p>`,
+    body: group.components.map(componentCard).join('\n'),
   })
 }
 
@@ -545,6 +664,12 @@ function buildTokensPage(data) {
     page: 'tokens.html',
     title: 'Tokens',
     pkg: data.pkg,
+    sections: [
+      { id: 'tokens-colors', label: 'Colour' },
+      { id: 'tokens-spacing', label: 'Spacing' },
+      { id: 'tokens-typography', label: 'Typography' },
+      { id: 'tokens-semantic', label: 'Semantic by context' },
+    ],
     lede: `<p>${data.referenceTokens.length} reference tokens and ${data.semanticTokens.length} semantic tokens, exactly as the server returns them — including the line each one was parsed from. This is what an agent reads instead of guessing a hex value.</p>`,
     body:
       referenceSections.join('\n') +
@@ -595,6 +720,10 @@ function buildIconsPage(data) {
     page: 'icons.html',
     title: 'Icons',
     pkg: data.pkg,
+    sections: [
+      { id: 'icon-mixins', label: 'Icon mixins' },
+      { id: 'logotypes', label: 'Logotypes' },
+    ],
     lede: `<p>Icons are colourless by design: each is a mask on a pseudo-element, so it takes the colour you set. Every icon below is drawn with the mixin the server named for it, and the logotype files were written straight from <code>get_icon</code> responses.</p>`,
     body:
       section(
@@ -664,6 +793,7 @@ function buildThemesPage(data) {
     page: 'themes.html',
     title: 'Themes',
     pkg: data.pkg,
+    sections: data.contexts.map((context) => ({ id: `theme-${context}`, label: `theme-${context}` })),
     lede: `<p>The server reports ${data.contexts.length} theme contexts. Each panel below opts into one of them, so the identical markup can be compared across all of them at once.</p>`,
     body: panels,
   })
@@ -676,6 +806,10 @@ function buildIndexPage(data) {
     page: 'index.html',
     title: 'Sample site',
     pkg: data.pkg,
+    sections: [
+      { id: 'what', label: 'What is on each page' },
+      { id: 'how', label: 'How this site is built' },
+    ],
     lede: `<p>This site is generated by calling <code>kth-style-mcp</code> over MCP. Every component, token, theme and icon on it arrived as a <code>tools/call</code> response from the running server — the same responses your coding agent gets.</p>
       <p>Use it to see how a component actually looks before asking an agent to build with it, and to check that what an agent tells you matches what the server says.</p>`,
     body:
@@ -687,7 +821,12 @@ function buildIndexPage(data) {
           <table class="kth-table">
             <thead><tr><th>Page</th><th>Shows</th><th>Built from</th></tr></thead>
             <tbody>
-              <tr><td><a href="components.html">Components</a></td><td>All ${data.components.length} components, live</td><td><code>kth_style_list_components</code></td></tr>
+              ${groupComponents(data.components)
+                .map(
+                  (group) =>
+                    `<tr><td><a href="${group.file}">${escape(group.label)}</a></td><td>${group.components.length} components, live</td><td><code>kth_style_list_components</code></td></tr>`
+                )
+                .join('\n              ')}
               <tr><td><a href="themes.html">Themes</a></td><td>The same markup under ${data.contexts.length} contexts</td><td><code>kth_style_get_theme</code></td></tr>
               <tr><td><a href="tokens.html">Tokens</a></td><td>${data.referenceTokens.length} reference, ${data.semanticTokens.length} semantic tokens</td><td><code>kth_style_list_tokens</code></td></tr>
               <tr><td><a href="icons.html">Icons</a></td><td>${iconCount} icon mixins, ${data.logotypes.length} logotypes</td><td><code>search_icons</code>, <code>get_icon</code></td></tr>
@@ -869,11 +1008,17 @@ async function main() {
 
   const pages = {
     'index.html': buildIndexPage(data),
-    'components.html': buildComponentsPage(data),
     'themes.html': buildThemesPage(data),
     'tokens.html': buildTokensPage(data),
     'icons.html': buildIconsPage(data),
   }
+  for (const group of groupComponents(components)) {
+    pages[group.file] = buildComponentPage(group, data)
+  }
+
+  // The old single components page is gone; drop it so stale output cannot
+  // linger next to the pages that replaced it.
+  fs.rmSync(path.join(SITE, 'components.html'), { force: true })
   for (const [name, html] of Object.entries(pages)) {
     fs.writeFileSync(path.join(SITE, name), html)
   }

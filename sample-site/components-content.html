@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content and feedback — kth-style-mcp sample site</title>
+<meta name="description" content="Every component, token, theme and icon that kth-style-mcp serves, rendered from live MCP responses.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="kth-a11y-nav" href="#main">Skip to main content</a>
+
+<div class="kth-kpm">
+  <div class="kth-entrances">
+    <ul>
+      <li><a href="../index.html">kth-style-mcp</a></li>
+      <li><a href="https://github.com/KTH/style">@kth/style</a></li>
+    </ul>
+  </div>
+</div>
+
+<header class="kth-header">
+  <div class="kth-header__container">
+    <a href="index.html" class="kth-logotype">
+      <figure>
+        <img alt="KTH" width="64" height="64" src="assets/logotype-blue.svg">
+      </figure>
+    </a>
+
+    <nav class="kth-mega-menu" aria-label="Sample site">
+      <ul>
+        <li>
+          <a class="kth-menu-item" href="index.html">Overview</a>
+        </li>
+        <li>
+          <button class="kth-menu-item dropdown" data-id="nav-components" aria-current="true">Components</button>
+          <dialog class="kth-menu-panel" data-id="nav-components">
+            <div class="kth-menu-panel__container">
+              <div class="kth-menu-panel__header">
+                <div>
+                  <h2>Components</h2>
+                  <p>Every component the server publishes, grouped by what you are building.</p>
+                </div>
+                <button class="kth-icon-button close">
+                  <span class="kth-visually-hidden">Close</span>
+                </button>
+              </div>
+              <div class="kth-menu-panel__content">
+                <ul class="sample-panel-links">
+                <li>
+                  <a href="components-navigation.html">Navigation and chrome</a>
+                  <p>The page frame: the header and its dialogs, the logotype, breadcrumbs, local navigation and the footer.</p>
+                </li>
+                <li>
+                  <a href="components-forms.html">Forms and actions</a>
+                  <p>Everything a person clicks or types into.</p>
+                </li>
+                <li>
+                  <a href="components-content.html" aria-current="page">Content and feedback</a>
+                  <p>Layout containers, tabular data, disclosure widgets and messages.</p>
+                </li>
+                </ul>
+              </div>
+            </div>
+          </dialog>
+        </li>
+        <li>
+          <a class="kth-menu-item" href="themes.html">Themes</a>
+        </li>
+        <li>
+          <a class="kth-menu-item" href="tokens.html">Tokens</a>
+        </li>
+        <li>
+          <a class="kth-menu-item" href="icons.html">Icons</a>
+        </li>
+      </ul>
+    </nav>
+
+    <ul class="kth-header__tools">
+      <li>
+        <button class="kth-menu-item search">Search</button>
+        <dialog class="kth-menu-panel">
+          <div class="kth-menu-panel__container search">
+            <button class="kth-icon-button close">
+              <span class="kth-visually-hidden">Close</span>
+            </button>
+            <div class="kth-menu-panel__content search">
+              <form action="#" method="get" onsubmit="return false">
+                <div class="kth-search">
+                  <label for="site-search">Search this sample</label>
+                  <input type="text" id="site-search" name="q" autocomplete="off">
+                  <button type="submit"><span class="kth-visually-hidden">Search</span></button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </dialog>
+      </li>
+      <li>
+        <!-- No href: initTranslationModal only opens the dialog when the
+             trigger has nothing to navigate to. -->
+        <button class="kth-menu-item language" lang="sv">Svenska</button>
+        <dialog class="kth-translation">
+          <button class="kth-icon-button close">
+            <span class="kth-visually-hidden">Close</span>
+          </button>
+          <h2>Byt språk</h2>
+          <p>Opened by <code>MenuPanel.initTranslationModal()</code>. Give the trigger an <code>href</code> and it navigates instead of opening — that is the documented behaviour, and it is why this one is a button.</p>
+        </dialog>
+      </li>
+    </ul>
+
+    <button class="kth-menu-item menu collapsable">Menu</button>
+
+    <nav class="kth-mega-menu--collapsable" aria-label="Sample site, mobile">
+      <dialog class="kth-mobile-menu">
+        <button class="kth-icon-button close">
+          <span class="kth-visually-hidden">Close</span>
+        </button>
+        <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="components-navigation.html">Navigation and chrome</a></li>
+            <li><a href="components-forms.html">Forms and actions</a></li>
+            <li><a href="components-content.html" aria-current="page">Content and feedback</a></li>
+            <li><a href="themes.html">Themes</a></li>
+            <li><a href="tokens.html">Tokens</a></li>
+            <li><a href="icons.html">Icons</a></li>
+        </ul>
+      </dialog>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="sample-main">
+  <div class="kth-content">
+    <div class="sample-shell">
+      <nav class="kth-breadcrumbs" aria-label="Breadcrumbs">
+        <ol>
+          <li><a href="../index.html">kth-style-mcp</a></li>
+          <li><a href="index.html">Sample site</a></li>
+          <li>Content and feedback</li>
+        </ol>
+      </nav>
+
+      <div class="sample-lede">
+        <h1>Content and feedback</h1>
+        <p>Layout containers, tabular data, disclosure widgets and messages. 7 of the 23 components the server lists for <code>@kth/style 1.14.1</code>. Each import path and class list below is what <code>kth_style_list_components</code> returned for that component.</p>
+      </div>
+
+      <div class="sample-layout">
+      <nav class="kth-local-navigation" aria-label="On this page">
+        <ul>
+            <li><a href="#content">content</a></li>
+            <li><a href="#table">table</a></li>
+            <li><a href="#tabs">tabs</a></li>
+            <li><a href="#accordion">accordion</a></li>
+            <li><a href="#details">details</a></li>
+            <li><a href="#alert">alert</a></li>
+            <li><a href="#visually-hidden">visually-hidden</a></li>
+        </ul>
+      </nav>
+        <div class="sample-body">
+
+      <section class="sample-section" id="content">
+        <h2>content</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/content"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/content.scss · .kth-content .kth-main-content</p>
+        <div class="sample-demo stack">
+          <p>Every page here is wrapped in <code>.kth-content</code>, which applies the package container width.</p>
+        </div>
+      </section>
+
+      <section class="sample-section" id="table">
+        <h2>table</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/table"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/table.scss · .kth-table .kth-table__cell--numeric .kth-table__column--sortable</p>
+        <div class="sample-demo stack">
+          <table class="kth-table">
+            <caption>Tools by response shape</caption>
+            <thead>
+              <tr>
+                <th class="kth-table__column--sortable" aria-sort="ascending">Tool</th>
+                <th>Returns</th>
+                <th class="kth-table__cell--numeric">Fields</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>kth_style_get_token</td><td>One exact token</td><td class="kth-table__cell--numeric">12</td></tr>
+              <tr><td>kth_style_get_theme</td><td>A full theme context</td><td class="kth-table__cell--numeric">31</td></tr>
+              <tr><td>get_component_guidance</td><td>Classes, tokens, mixins</td><td class="kth-table__cell--numeric">9</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="sample-section" id="tabs">
+        <h2>tabs</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/tabs"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/tabs.scss · .kth-tabs .kth-tabs__pane</p>
+        <div class="sample-demo stack">
+          <div class="kth-tabs">
+            <ul>
+              <li><a href="#tab-installed" class="active">installed</a></li>
+              <li><a href="#tab-installed">source-dir</a></li>
+              <li><a href="#tab-installed">monorepo-default</a></li>
+            </ul>
+          </div>
+          <div class="kth-tabs__pane" id="tab-installed">
+            <p>The default: <code>node_modules/@kth/style</code>, found by walking up from the server.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sample-section" id="accordion">
+        <h2>accordion</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/accordion"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/accordion.scss · .kth-accordion</p>
+        <div class="sample-demo stack">
+          <div class="kth-accordion">
+            <details>
+              <summary>What does the server return?</summary>
+              <p>Exact values, the file and line they were parsed from, the package version, and how the package was discovered.</p>
+            </details>
+            <details>
+              <summary>What happens when a value cannot be resolved?</summary>
+              <p>A structured diagnostic, never a plausible-looking guess.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="sample-section" id="details">
+        <h2>details</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/details"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/details.scss · .kth-details</p>
+        <div class="sample-demo stack">
+          <details class="sample-details">
+            <summary>A bare &lt;details&gt; styled by the details mixin</summary>
+            <p>The stylesheet generates a <code>.kth-details</code> class by default. Importing it with <code>$generate-css: false</code> lets you apply the mixin to plain markup instead.</p>
+          </details>
+        </div>
+      </section>
+
+      <section class="sample-section" id="alert">
+        <h2>alert</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/alert"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/alert.scss · .kth-alert</p>
+        <div class="sample-demo stack">
+          <div class="kth-alert info"><h2>Information</h2><p>The catalog was rebuilt from the installed package.</p></div>
+          <div class="kth-alert warning"><h2>Warning</h2><p>This context is not published by the package, so no values were returned.</p></div>
+          <div class="kth-alert success"><h2>Success</h2><p>All components resolved against the package.</p></div>
+        </div>
+      </section>
+
+      <section class="sample-section" id="visually-hidden">
+        <h2>visually-hidden</h2>
+        <p class="sample-note">Import with <code>@use "@kth/style/scss/components/visually-hidden"</code>.</p>
+        <p class="sample-source">via <b>kth_style_list_components</b> · scss/components/visually-hidden.scss · .kth-visually-hidden</p>
+        <div class="sample-demo stack">
+          <p>The next element is present for assistive technology but not painted:<span class="kth-visually-hidden">This text is only announced by screen readers.</span> <em>(nothing visible between the colon and here)</em></p>
+        </div>
+      </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="kth-footer">
+  <div class="kth-footer__content sample-shell">
+    <p>Built from live MCP responses against <code>@kth/style 1.14.1</code>, discovered as <code>installed</code>. No value on this page was written by hand.</p>
+    <p>Rebuild with <code>npm run sample</code> while the server is running. Back to the <a href="../index.html">project overview</a>.</p>
+  </div>
+</footer>
+
+<script type="module" src="sample.js"></script>
+</body>
+</html>
