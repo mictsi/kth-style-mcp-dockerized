@@ -104,3 +104,9 @@ For a request like **"build me an app using the KTH theme"**, an agent can now:
 4. Call `get_component_guidance` for focused areas like `button`, `input`, `alert`, `navigation`, or `translation-panel`.
 
 These tools are deterministic summaries over the indexed `style` monorepo; they do not generate app code themselves.
+
+## Credits
+
+MCP server created by [jrolofsson](https://github.com/jrolofsson).
+
+Style values are sourced from the KTH [`style`](https://github.com/KTH/style) monorepo; this server only indexes and reports them.

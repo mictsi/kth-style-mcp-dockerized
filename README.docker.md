@@ -97,3 +97,7 @@ Unchanged:
 npm run build
 npm start
 ```
+
+## Credits
+
+MCP server created by [jrolofsson](https://github.com/jrolofsson). This document covers the container packaging only — see [README.md](README.md) for the server itself.
