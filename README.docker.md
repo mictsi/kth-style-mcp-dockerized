@@ -98,6 +98,13 @@ npm run build
 npm start
 ```
 
+## Licensing
+
+The image redistributes the production dependency tree under `/app/node_modules`, each package
+keeping its own license file. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for full
+attribution, and [Known licensing gaps](README.md#known-licensing-gaps) — notably that
+`@kth/style` publishes no license — before distributing the image.
+
 ## Credits
 
 MCP server created by [jrolofsson](https://github.com/jrolofsson). This document covers the container packaging only — see [README.md](README.md) for the server itself.

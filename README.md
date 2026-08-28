@@ -76,7 +76,7 @@ Guidance and discovery helpers:
 - `suggest_theme_structure` — recommend the right `@kth/style` entrypoints, theme tokens, scripts, and components for a KTH app shape
 - `get_header_recipe` — explain the header/navigation wiring, including dialog hooks and the remaining legacy local-navigation IDs
 - `get_page_scaffold` — suggest a deterministic public/intranet/student-web/external page scaffold
-- `get_component_guidance` — drill into a component area such as header, footer, navigation, button, input, alert, accordion, or translation-panel
+- `get_component_guidance` — drill into any component the installed package publishes (all 23 in `@kth/style` 1.14.x), plus the behaviour aliases `navigation` and `modal`
 - `search_tokens` — search primitive tokens and parsed theme CSS-variable assignments
 - `get_token` — fetch one token by name
 - `search_mixins` — discover Sass mixins such as typography, icon, and theme helpers
@@ -87,12 +87,29 @@ Guidance and discovery helpers:
 - `get_entrypoints` — show the main SCSS/CSS/TypeScript entrypoints
 - `refresh_catalog` — rebuild the in-memory index after source changes
 
+## Package layouts
+
+The server indexes two layouts, and reports which one it used as `package.source`:
+
+- **Installed package** (the default, and what the Docker image runs): `node_modules/@kth/style`,
+  where paths start at `scss/...`. The published tarball ships `scss`, `dist` and `assets` only —
+  there is no authored `src/`, so script entrypoints resolve to the built bundles under `dist/`.
+- **Monorepo checkout** (`KTH_STYLE_SOURCE_DIR`): paths start at `@kth/style/scss/...`, authored
+  `src/*.ts` is present, and a sibling `@kth/ui-components` is indexed when it exists.
+
+Component guidance adapts to what is actually installed: React wrapper components are only
+claimed when `@kth/ui-components` is present, and components without a bespoke recipe are
+described from their own stylesheet — import path, declared `kth-*` classes, semantic and
+reference tokens, mixins, icons, and the theme variants the component itself declares. Components
+added in future `@kth/style` releases are therefore covered without changing this server.
+
 ## Notes
 
 - `search_tokens` parses theme mixins like `theme-default` and exposes entries such as `theme-default.color-primary`.
 - Icons in `@kth/style` are colorless by design; they are styled via `mask-image`/`currentColor`, so the old color-variant lookup model no longer applies.
 - `src/react.ts` in `@kth/style` is intentionally ignored as an entrypoint because it is currently just a stub.
 - `localNavigation.ts` still depends on `#mainMenu` and `#mobileMenuList` even though the newer menu system is dialog-based.
+- `@kth/style` exports only `MenuPanel` from its JavaScript entrypoint; there is no accordion script. The accordion is CSS over native `<details>`/`<summary>`.
 
 ## Example agent-oriented flow
 
@@ -104,6 +121,37 @@ For a request like **"build me an app using the KTH theme"**, an agent can now:
 4. Call `get_component_guidance` for focused areas like `button`, `input`, `alert`, `navigation`, or `translation-panel`.
 
 These tools are deterministic summaries over the indexed `style` monorepo; they do not generate app code themselves.
+
+## Licensing
+
+`kth-style-mcp` is MIT licensed — see [LICENSE](LICENSE).
+
+Every dependency in the production tree is permissive and MIT-compatible: 82 MIT, 7 ISC,
+2 BSD-3-Clause, 1 BSD-2-Clause. No copyleft or source-available license appears in the tree.
+Full attribution and license texts are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md),
+regenerated with:
+
+```bash
+npm ci && npm run notices
+```
+
+### Known licensing gaps
+
+**`@kth/style` is MIT upstream but does not declare it.** The source repository
+[github.com/KTH/style](https://github.com/KTH/style) carries an MIT `LICENSE`
+(Copyright (c) 2024 KTH Royal Institute of Technology), so the grant exists and is compatible
+with this project. The published npm package omits it: `@kth/style@1.14.1` has no `license`
+field, no `LICENSE` file and no `repository` link, so nothing in the artifact the Docker image
+redistributes records the grant. The fix belongs upstream — add `license: "MIT"` and ship the
+`LICENSE` file in the package.
+
+Two assets inside that package carry separate terms: the Figtree typeface (SIL OFL 1.1 upstream,
+whose notice requirement is unmet inside the package) and the KTH logotype (a trademark, governed
+by KTH's visual identity rules rather than any code license).
+
+The `node:22-alpine` base image bundles its own stack, including BusyBox under GPL-2.0-only.
+That is aggregation inside the image, not linkage into this application, so it does not affect
+this project's license; redistributing the built image inherits Alpine's and Node's obligations.
 
 ## Credits
 
