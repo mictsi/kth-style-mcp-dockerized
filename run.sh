@@ -48,8 +48,13 @@ cmd_run() {
   local build_args=()
   [[ "${1:-}" == "--build" ]] && build_args=(--build)
   "${COMPOSE[@]}" up -d "${build_args[@]}"
+  local base="${BASE_PATH%/}"
   echo "MCP endpoint: $(endpoint)"
-  echo "Health:       $(endpoint | sed 's#/mcp$#/healthz#')"
+  echo "Health:       http://${BIND_ADDRESS}:${HOST_PORT}${base}/healthz"
+  if [[ "${SERVE_SITE:-true}" != "false" ]]; then
+    echo "Landing page: http://${BIND_ADDRESS}:${HOST_PORT}${base}/"
+    echo "Sample site:  http://${BIND_ADDRESS}:${HOST_PORT}${base}/sample-site/"
+  fi
 }
 
 cmd_stop() {

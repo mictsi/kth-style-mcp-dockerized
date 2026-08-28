@@ -4,6 +4,9 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import { createMcpExpressApp } from '@modelcontextprotocol/sdk/server/express.js'
 import express from 'express'
 import type { NextFunction, Request, Response } from 'express'
+import { existsSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import { createServer } from './index.js'
 
@@ -11,6 +14,13 @@ const DEFAULT_PORT = 8888
 const DEFAULT_HOST = '0.0.0.0'
 const MCP_ROUTE = '/mcp'
 const HEALTH_ROUTE = '/healthz'
+const SAMPLE_ROUTE = '/sample-site'
+
+// dist/http.js sits one level below the application root, where the landing
+// page and the sample site live in both the image and a source checkout.
+const APP_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
+const LANDING_PAGE = path.join(APP_ROOT, 'index.html')
+const SAMPLE_SITE_DIR = path.join(APP_ROOT, 'sample-site')
 const SHUTDOWN_GRACE_MS = 10_000
 
 /** Path segments we are willing to mount the app under. */
@@ -130,6 +140,19 @@ function readAllowedHosts(publicHost: string | null): string[] | undefined {
   return [...hosts]
 }
 
+/**
+ * The landing page and sample site are served from the same mount point as the
+ * MCP endpoint, so a deployment publishes one URL. Set SERVE_SITE=false to run
+ * the protocol endpoint alone.
+ */
+function readServeSite(): boolean {
+  const value = process.env.SERVE_SITE?.trim().toLowerCase()
+  if (value === 'false' || value === '0' || value === 'off') {
+    return false
+  }
+  return existsSync(LANDING_PAGE) || existsSync(SAMPLE_SITE_DIR)
+}
+
 function readTrustProxy(): boolean | number | string {
   const value = process.env.TRUST_PROXY?.trim()
   if (!value || value === 'false' || value === '0') {
@@ -142,13 +165,41 @@ function readTrustProxy(): boolean | number | string {
   return Number.isInteger(hops) && hops >= 0 ? hops : value
 }
 
-function securityHeaders(_req: Request, res: Response, next: NextFunction): void {
+function baseSecurityHeaders(res: Response): void {
   res.setHeader('X-Content-Type-Options', 'nosniff')
   res.setHeader('X-Frame-Options', 'DENY')
   res.setHeader('Referrer-Policy', 'no-referrer')
   res.setHeader('Cross-Origin-Resource-Policy', 'same-origin')
+}
+
+/** JSON endpoints load nothing and must never be cached. */
+function apiSecurityHeaders(_req: Request, res: Response, next: NextFunction): void {
+  baseSecurityHeaders(res)
   res.setHeader('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none'")
   res.setHeader('Cache-Control', 'no-store')
+  next()
+}
+
+/**
+ * The landing page and sample site are documents, so they need a policy that
+ * permits their own assets: an inline <style> block on the landing page and the
+ * Figtree webfont from Google Fonts. Everything else stays denied.
+ */
+function siteSecurityHeaders(_req: Request, res: Response, next: NextFunction): void {
+  baseSecurityHeaders(res)
+  res.setHeader(
+    'Content-Security-Policy',
+    [
+      "default-src 'none'",
+      "img-src 'self' data:",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      'font-src https://fonts.gstatic.com',
+      "script-src 'self'",
+      "base-uri 'none'",
+      "form-action 'none'",
+      "frame-ancestors 'none'",
+    ].join('; ')
+  )
   next()
 }
 
@@ -171,22 +222,25 @@ async function main(): Promise<void> {
   const app = createMcpExpressApp({ host, allowedHosts })
   app.disable('x-powered-by')
   app.set('trust proxy', readTrustProxy())
-  app.use(securityHeaders)
 
   const router = express.Router()
 
-  router.get(HEALTH_ROUTE, (_req: Request, res: Response) => {
+  const serveSite = readServeSite()
+
+  router.get(HEALTH_ROUTE, apiSecurityHeaders, (_req: Request, res: Response) => {
     res.status(200).json({
       status: 'ok',
       service: 'kth-style-mcp',
       transport: 'streamable-http',
       basePath: basePath || '/',
       mcpPath: `${basePath}${MCP_ROUTE}`,
+      landingPage: serveSite ? `${basePath}/` : null,
+      sampleSite: serveSite ? `${basePath}${SAMPLE_ROUTE}/` : null,
       publicUrl: publicUrl ? `${publicUrl}${MCP_ROUTE}` : null,
     })
   })
 
-  router.post(MCP_ROUTE, async (req: Request, res: Response) => {
+  router.post(MCP_ROUTE, apiSecurityHeaders, async (req: Request, res: Response) => {
     const server = createServer()
     const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined })
 
@@ -210,12 +264,47 @@ async function main(): Promise<void> {
     }
   })
 
-  router.get(MCP_ROUTE, methodNotAllowed('Method not allowed. Use POST for stateless Streamable HTTP.'))
-  router.delete(MCP_ROUTE, methodNotAllowed('Method not allowed in stateless mode.'))
+  router.get(MCP_ROUTE, apiSecurityHeaders, methodNotAllowed('Method not allowed. Use POST for stateless Streamable HTTP.'))
+  router.delete(MCP_ROUTE, apiSecurityHeaders, methodNotAllowed('Method not allowed in stateless mode.'))
+
+  // Only these two paths are exposed; the rest of the application directory
+  // (node_modules, dist, package.json) is never served.
+  if (serveSite) {
+    if (existsSync(LANDING_PAGE)) {
+      const sendLanding = (_req: Request, res: Response) => res.sendFile(LANDING_PAGE)
+      router.get('/', siteSecurityHeaders, sendLanding)
+      router.get('/index.html', siteSecurityHeaders, sendLanding)
+    }
+
+    if (existsSync(SAMPLE_SITE_DIR)) {
+      router.use(
+        SAMPLE_ROUTE,
+        siteSecurityHeaders,
+        express.static(SAMPLE_SITE_DIR, {
+          index: 'index.html',
+          dotfiles: 'deny',
+          redirect: true,
+        })
+      )
+    }
+  }
+
+  // Without the trailing slash the browser resolves the page's relative links
+  // against the parent path, so the bare mount point redirects rather than
+  // serving the landing page directly.
+  if (basePath && serveSite) {
+    app.get(basePath, (req: Request, res: Response, next: NextFunction) => {
+      if (req.originalUrl.split('?')[0] === basePath) {
+        res.redirect(301, `${basePath}/`)
+        return
+      }
+      next()
+    })
+  }
 
   app.use(basePath || '/', router)
 
-  app.use((_req: Request, res: Response) => {
+  app.use(apiSecurityHeaders, (_req: Request, res: Response) => {
     res.status(404).json({
       jsonrpc: '2.0',
       error: { code: -32601, message: `Not found. This server is published under "${basePath || '/'}".` },
@@ -225,6 +314,10 @@ async function main(): Promise<void> {
 
   const httpServer = app.listen(port, host, () => {
     console.log(`kth-style-mcp listening on http://${host}:${port}${basePath}${MCP_ROUTE}`)
+    if (serveSite) {
+      console.log(`kth-style-mcp landing page on http://${host}:${port}${basePath}/`)
+      console.log(`kth-style-mcp sample site on http://${host}:${port}${basePath}${SAMPLE_ROUTE}/`)
+    }
     if (publicUrl) {
       console.log(`kth-style-mcp published at ${publicUrl}${MCP_ROUTE}`)
     }

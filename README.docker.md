@@ -35,10 +35,18 @@ Two ways to set it:
 With `BASE_PATH=/kth-style-mcp`:
 
 ```text
-POST /kth-style-mcp/mcp        MCP Streamable HTTP endpoint
-GET  /kth-style-mcp/healthz    health probe
-everything else                404
+POST /kth-style-mcp/mcp             MCP Streamable HTTP endpoint
+GET  /kth-style-mcp/healthz         health probe
+GET  /kth-style-mcp/                landing page
+GET  /kth-style-mcp/sample-site/    sample site
+everything else                     404
 ```
+
+The container serves the landing page and the sample site itself, so a deployment
+publishes one URL and everything lives under it. `GET /kth-style-mcp` redirects to
+`/kth-style-mcp/` so the pages' relative links resolve. Nothing else in the
+application directory is exposed — `package.json`, `dist/` and `node_modules/`
+all return 404. Set `SERVE_SITE=false` to run the protocol endpoint alone.
 
 The health payload echoes the resolved routing:
 
@@ -57,6 +65,7 @@ curl http://127.0.0.1:8888/kth-style-mcp/healthz
 | `BASE_PATH` | `/` | Path prefix; overrides the `PUBLIC_URL` path |
 | `ALLOWED_HOSTS` | – | Extra Host header hostnames, comma separated |
 | `TRUST_PROXY` | `0` | Reverse-proxy hops Express should trust |
+| `SERVE_SITE` | `true` | Serve the landing page and sample site under `BASE_PATH` |
 | `HOST` / `PORT` | `0.0.0.0` / `8888` | In-container bind address |
 | `BIND_ADDRESS` / `HOST_PORT` | `127.0.0.1` / `8888` | Host side of the published port |
 
@@ -83,7 +92,8 @@ Runtime (compose):
 
 Application:
 
-- security headers on every response (`nosniff`, `DENY`, `no-referrer`, CSP `default-src 'none'`, `no-store`)
+- security headers on every response (`nosniff`, `DENY`, `no-referrer`). JSON endpoints get CSP `default-src 'none'` and `no-store`; the served pages get a document policy that allows only their own assets and the Google Fonts stylesheet
+- the static mount exposes exactly the landing page and `sample-site/`, with dotfiles denied
 - `x-powered-by` disabled
 - header/request/keep-alive timeouts bound against slow clients
 - 100 KB JSON body cap (Express default)

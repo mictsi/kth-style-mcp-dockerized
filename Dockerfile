@@ -30,6 +30,10 @@ COPY --from=build --chown=root:root --chmod=444 /app/package.json ./package.json
 COPY --from=build --chown=root:root /app/node_modules ./node_modules
 COPY --from=build --chown=root:root /app/dist ./dist
 
+# The landing page and sample site are served under BASE_PATH alongside /mcp.
+COPY --chown=root:root --chmod=444 index.html ./index.html
+COPY --chown=root:root sample-site ./sample-site
+
 # node:22-alpine ships uid/gid 1000 as "node"; pin numerically so the image
 # still runs non-root when the platform ignores the user name.
 USER 1000:1000

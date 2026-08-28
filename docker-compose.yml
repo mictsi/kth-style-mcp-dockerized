@@ -19,6 +19,8 @@ services:
       ALLOWED_HOSTS: ${ALLOWED_HOSTS:-}
       # Set to the number of proxy hops when behind a reverse proxy.
       TRUST_PROXY: ${TRUST_PROXY:-0}
+      # Serve the landing page and sample site under BASE_PATH. false = MCP only.
+      SERVE_SITE: ${SERVE_SITE:-true}
     ports:
       # Bound to loopback by default; put a reverse proxy in front to publish.
       - "${BIND_ADDRESS:-127.0.0.1}:${HOST_PORT:-8888}:8888"
