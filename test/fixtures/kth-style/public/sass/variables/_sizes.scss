@@ -1,0 +1,7 @@
+@use 'sass:math';
+
+$spacing: 10px;
+$doubleSpacing: ($spacing * 2);
+$quarterSpacing: math.div($spacing, 2);
+$gutter: 15px;
+$widePageWidth: 1228px;

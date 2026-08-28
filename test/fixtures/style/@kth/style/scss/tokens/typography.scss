@@ -1,0 +1,17 @@
+$font-figtree: Figtree, sans-serif;
+
+@mixin font-heading-s {
+  font-size: 1.25rem;
+}
+
+@mixin font-heading-m {
+  font-size: 1.5rem;
+}
+
+@mixin font-heading-l-fluid {
+  font-size: 1.875rem;
+}
+
+@mixin font-default {
+  font-size: 1rem;
+}

@@ -1,0 +1,47 @@
+services:
+  kth-style-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kth-style-mcp:local
+    container_name: kth-style-mcp
+    init: true
+    user: "1000:1000"
+    environment:
+      HOST: 0.0.0.0
+      PORT: "8888"
+      # Full URL the app is published under. Its path becomes the mount point
+      # and its host is added to the DNS-rebinding allowlist.
+      PUBLIC_URL: ${PUBLIC_URL:-}
+      # Path prefix; overrides the PUBLIC_URL path when set. "/" serves at root.
+      BASE_PATH: ${BASE_PATH:-/}
+      # Extra Host headers accepted, comma separated.
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-}
+      # Set to the number of proxy hops when behind a reverse proxy.
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+    ports:
+      # Bound to loopback by default; put a reverse proxy in front to publish.
+      - "${BIND_ADDRESS:-127.0.0.1}:${HOST_PORT:-8888}:8888"
+    restart: unless-stopped
+
+    # --- hardening ---
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=32m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 512m
+    memswap_limit: 512m
+    cpus: 1.0
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 2048
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -1,0 +1,34 @@
+$color-white: #fcfcfc;
+$color-blue-kth: #004791;
+$color-blue-marine: #000061;
+$color-blue-lake: #036eb8;
+$color-gray-medium: #a5a5a5;
+$color-black: #212121;
+
+@mixin theme-default {
+  --color-primary: #{$color-blue-kth};
+  --color-header: #{$color-white};
+  --color-on-header: #{$color-blue-marine};
+  --color-tertiary: #{$color-blue-lake};
+}
+
+@mixin theme-intranet {
+  --color-primary: #{$color-blue-kth};
+  --color-header: #{$color-white};
+  --color-on-header: #{$color-blue-marine};
+  --color-tertiary: #{$color-blue-kth};
+}
+
+@mixin theme-student-web {
+  --color-primary: #{$color-blue-kth};
+  --color-header: #{$color-white};
+  --color-on-header: #{$color-blue-marine};
+  --color-tertiary: #{$color-blue-lake};
+}
+
+@mixin theme-inverse {
+  --color-primary: #{$color-white};
+  --color-header: #{$color-blue-marine};
+  --color-on-header: #{$color-white};
+  --color-tertiary: #{$color-white};
+}

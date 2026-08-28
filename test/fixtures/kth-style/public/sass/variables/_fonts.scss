@@ -1,0 +1,26 @@
+$open-sans: 'Open Sans';
+$sansSerif: $open-sans, Arial, sans-serif;
+$h1-fontSize: 1.75rem !default;
+$copyText-fontSize: 1rem !default;
+
+// Heading level 1
+@mixin t1($color: true, $marginTop: 0, $marginBottom: 28px) {
+  font-family: $sansSerif;
+  color: $blue;
+}
+
+@mixin t2($color: true, $marginTop: 28px, $marginBottom: 14px) {
+  font-family: $sansSerif;
+}
+
+@mixin t10($color: true, $marginTop: 0, $marginBottom: 30px) {
+  font-family: $sansSerif;
+}
+
+@mixin t11($color: true, $marginTop: 0, $marginBottom: 14px) {
+  font-family: $sansSerif;
+}
+
+@mixin t12($color: true, $marginTop: 0, $marginBottom: 16px) {
+  font-family: Georgia, serif;
+}

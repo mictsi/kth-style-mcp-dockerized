@@ -1,0 +1,46 @@
+@use "../tokens/colors";
+@use "../tokens/spacing";
+@use "../tokens/sizing";
+@use "../utils/mixins";
+
+@layer kth-style {
+  .kth-header.intranet {
+    @include colors.theme-intranet;
+  }
+
+  .kth-header.external {
+    @include colors.theme-inverse;
+  }
+
+  .kth-header.student-web {
+    @include colors.theme-student-web;
+  }
+
+  .kth-header {
+    color: var(--color-on-header);
+    background: var(--color-header);
+    padding-block: spacing.$space-16;
+    position: relative;
+
+    &__container {
+      @include mixins.container;
+
+      display: flex;
+      align-items: center;
+    }
+
+    &__tools {
+      @include mixins.horizontal-list;
+
+      flex-wrap: wrap;
+      gap: 0 spacing.$space-16;
+      justify-content: flex-end;
+      align-items: center;
+      margin-inline-start: auto;
+    }
+
+    &__mega-menu--collapsable {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,15 @@
+$space-16: 1rem;
+$space-32: 2rem;
+$space-24: 1.5rem;
+
+@mixin theme-default {
+  --space-inner-inline: #{$space-16};
+  --space-inner-block: #{$space-16};
+  --space-inner-icon: #{$space-16};
+}
+
+@mixin theme-dense {
+  --space-inner-inline: #{$space-16};
+  --space-inner-block: #{$space-16};
+  --space-inner-icon: #{$space-16};
+}

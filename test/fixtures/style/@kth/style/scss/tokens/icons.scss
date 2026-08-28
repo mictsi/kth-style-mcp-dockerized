@@ -1,0 +1,45 @@
+@use "./icons-raw.scss" as raw;
+
+@mixin icon-menu {
+  @include with-icon(raw.$icon-menu);
+}
+
+@mixin icon-close {
+  @include with-icon(raw.$icon-close);
+}
+
+@mixin icon-search {
+  @include with-icon(raw.$icon-search);
+}
+
+@mixin icon-arrow-back {
+  @include with-icon(raw.$icon-arrow-forward);
+}
+
+@mixin icon-caret-right {
+  @include with-icon(raw.$icon-caret-right);
+}
+
+@mixin icon-caret-right-big {
+  @include with-icon(raw.$icon-caret-right-big);
+}
+
+@mixin icon-info-500 {
+  @include with-icon(raw.$icon-info-500);
+}
+
+@mixin icon-warning-500 {
+  @include with-icon(raw.$icon-warning-500);
+}
+
+@mixin icon-check-500 {
+  @include with-icon(raw.$icon-check-500);
+}
+
+@mixin icon-spinner {
+  @include with-icon(raw.$icon-spinner);
+}
+
+@mixin icon-input-checkbox {
+  @include with-icon(raw.$icon-input-checkbox);
+}
