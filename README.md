@@ -126,7 +126,7 @@ These tools are deterministic summaries over the indexed `style` monorepo; they 
 
 `kth-style-mcp` is MIT licensed — see [LICENSE](LICENSE).
 
-Every dependency in the production tree is permissive and MIT-compatible: 82 MIT, 7 ISC,
+Every dependency in the production tree is permissive and MIT-compatible: 83 MIT, 7 ISC,
 2 BSD-3-Clause, 1 BSD-2-Clause. No copyleft or source-available license appears in the tree.
 Full attribution and license texts are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md),
 regenerated with:

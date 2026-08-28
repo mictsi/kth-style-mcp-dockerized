@@ -56,7 +56,7 @@ Copyright (c) 2024 KTH Royal Institute of Technology
 
 | License | Packages |
 | --- | --- |
-| `MIT` | 82 |
+| `MIT` | 83 |
 | `ISC` | 7 |
 | `BSD-3-Clause` | 2 |
 | `BSD-2-Clause` | 1 |
@@ -66,19 +66,20 @@ Copyright (c) 2024 KTH Royal Institute of Technology
 
 | Package | Version | License |
 | --- | --- | --- |
-| `@hono/node-server` | 1.19.14 | `MIT` |
+| `@hono/node-server` | 1.19.17 | `MIT` |
 | `@kth/style` | 1.14.1 | `UNKNOWN` |
 | `@modelcontextprotocol/sdk` | 1.29.0 | `MIT` |
 | `accepts` | 2.0.0 | `MIT` |
 | `ajv` | 8.20.0 | `MIT` |
 | `ajv-formats` | 3.0.1 | `MIT` |
-| `body-parser` | 2.2.2 | `MIT` |
+| `body-parser` | 2.3.0 | `MIT` |
 | `bytes` | 3.1.2 | `MIT` |
 | `call-bind-apply-helpers` | 1.0.2 | `MIT` |
 | `call-bound` | 1.0.4 | `MIT` |
 | `content-disposition` | 1.1.0 | `MIT` |
 | `content-type` | 1.0.5 | `MIT` |
 | `content-type` | 2.0.0 | `MIT` |
+| `content-type` | 2.1.0 | `MIT` |
 | `cookie` | 0.7.2 | `MIT` |
 | `cookie-signature` | 1.2.2 | `MIT` |
 | `cors` | 2.8.6 | `MIT` |
@@ -98,7 +99,7 @@ Copyright (c) 2024 KTH Royal Institute of Technology
 | `express` | 5.2.1 | `MIT` |
 | `express-rate-limit` | 8.5.2 | `MIT` |
 | `fast-deep-equal` | 3.1.3 | `MIT` |
-| `fast-uri` | 3.1.2 | `BSD-3-Clause` |
+| `fast-uri` | 3.1.6 | `BSD-3-Clause` |
 | `finalhandler` | 2.1.1 | `MIT` |
 | `forwarded` | 0.2.0 | `MIT` |
 | `fresh` | 2.0.0 | `MIT` |
@@ -108,11 +109,11 @@ Copyright (c) 2024 KTH Royal Institute of Technology
 | `gopd` | 1.2.0 | `MIT` |
 | `has-symbols` | 1.1.0 | `MIT` |
 | `hasown` | 2.0.4 | `MIT` |
-| `hono` | 4.12.23 | `MIT` |
+| `hono` | 4.13.5 | `MIT` |
 | `http-errors` | 2.0.1 | `MIT` |
 | `iconv-lite` | 0.7.2 | `MIT` |
 | `inherits` | 2.0.4 | `ISC` |
-| `ip-address` | 10.2.0 | `MIT` |
+| `ip-address` | 10.5.0 | `MIT` |
 | `ipaddr.js` | 1.9.1 | `MIT` |
 | `is-promise` | 4.0.0 | `MIT` |
 | `isexe` | 2.0.0 | `ISC` |
@@ -162,7 +163,7 @@ Copyright (c) 2024 KTH Royal Institute of Technology
 
 ## Full license texts
 
-### @hono/node-server@1.19.14
+### @hono/node-server@1.19.17
 
 License: `MIT`  
 Homepage: https://github.com/honojs/node-server
@@ -315,7 +316,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### body-parser@2.2.2
+### body-parser@2.3.0
 
 License: `MIT`  
 Homepage: expressjs/body-parser
@@ -496,6 +497,36 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
 
 ### content-type@2.0.0
+
+License: `MIT`  
+Homepage: jshttp/content-type
+
+```text
+(The MIT License)
+
+Copyright (c) 2015 Douglas Christopher Wilson
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```
+
+### content-type@2.1.0
 
 License: `MIT`  
 Homepage: jshttp/content-type
@@ -1087,7 +1118,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### fast-uri@3.1.2
+### fast-uri@3.1.6
 
 License: `BSD-3-Clause`  
 Homepage: https://github.com/fastify/fast-uri
@@ -1388,7 +1419,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-### hono@4.12.23
+### hono@4.13.5
 
 License: `MIT`  
 Homepage: https://hono.dev
@@ -1498,7 +1529,7 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ```
 
-### ip-address@10.2.0
+### ip-address@10.5.0
 
 License: `MIT`  
 Homepage: https://github.com/beaugunderson/ip-address
