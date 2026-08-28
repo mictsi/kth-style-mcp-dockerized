@@ -52,6 +52,8 @@ export interface Component {
   filePath: string
   relativePath: string
   importPath: string | null
+  /** `kth-*` class selectors declared by the file, parsed from the source. */
+  classes: string[]
 }
 
 export interface SearchableFile {
@@ -66,6 +68,18 @@ export interface EntryPoint {
   type: 'sass' | 'css' | 'js'
   relativePath: string
   description: string
+}
+
+/**
+ * The published `@kth/style` tarball ships `scss`, `dist` and `assets` only, so
+ * the authored `src/*.ts` entrypoints exist in a monorepo checkout but not in an
+ * installed package. Script entrypoints resolve to whichever of the two is present.
+ */
+interface ScriptEntrypointCandidate {
+  name: string
+  description: string
+  sourceRelative: string
+  distRelative: string
 }
 
 export interface PackageInfo {
@@ -307,7 +321,7 @@ export async function buildCatalog(explicitDir?: string): Promise<Catalog> {
   const iconMixinReferences = parseIconMixinReferences(iconsScssContent)
   const icons = buildIconGroups(svgFiles, svgContents, rawIconVariableMap, iconMixinReferences, layout.sourceDir)
 
-  const components = buildComponents(allStyleScssFiles, styleSourceFiles, uiSourceFiles, layout.sourceDir)
+  const components = buildComponents(allStyleScssFiles, scssContents, styleSourceFiles, uiSourceFiles, layout.sourceDir)
   const searchableFiles = buildSearchableFiles(
     allStyleScssFiles,
     scssContents,
@@ -897,23 +911,25 @@ function buildIconGroups(
 
 function buildComponents(
   scssFiles: string[],
+  scssContents: string[],
   styleSourceFiles: string[],
   uiSourceFiles: string[],
   sourceDir: string
 ): Component[] {
-  const scssComponents = scssFiles.flatMap<Component>((filePath) => {
+  const scssComponents = scssFiles.flatMap<Component>((filePath, index) => {
     const relativePath = path.relative(sourceDir, filePath)
-    const normalizedPath = relativePath.replace(/\\/g, '/')
+    const anchoredPath = anchoredRelative(sourceDir, filePath)
     const name = path.basename(filePath, '.scss')
+    const classes = parseComponentClasses(scssContents[index] ?? '')
 
-    if (normalizedPath.includes('/scss/components/')) {
-      return [{ name, kind: 'style-component', filePath, relativePath, importPath: scssImportPath(relativePath) }]
+    if (anchoredPath.includes('/scss/components/')) {
+      return [{ name, kind: 'style-component', filePath, relativePath, importPath: scssImportPath(relativePath), classes }]
     }
-    if (normalizedPath.includes('/scss/tokens/')) {
-      return [{ name, kind: 'token', filePath, relativePath, importPath: scssImportPath(relativePath) }]
+    if (anchoredPath.includes('/scss/tokens/')) {
+      return [{ name, kind: 'token', filePath, relativePath, importPath: scssImportPath(relativePath), classes }]
     }
-    if (normalizedPath.includes('/scss/utils/')) {
-      return [{ name, kind: 'util', filePath, relativePath, importPath: scssImportPath(relativePath) }]
+    if (anchoredPath.includes('/scss/utils/')) {
+      return [{ name, kind: 'util', filePath, relativePath, importPath: scssImportPath(relativePath), classes }]
     }
     return []
   })
@@ -924,16 +940,18 @@ function buildComponents(
     filePath,
     relativePath: path.relative(sourceDir, filePath),
     importPath: null,
+    classes: [],
   }))
 
   const uiComponents = uiSourceFiles
-    .filter((filePath) => filePath.replace(/\\/g, '/').includes('/src/components/'))
+    .filter((filePath) => anchoredRelative(sourceDir, filePath).includes('/src/components/'))
     .map<Component>((filePath) => ({
       name: path.basename(filePath, path.extname(filePath)),
       kind: 'ui-component',
       filePath,
       relativePath: path.relative(sourceDir, filePath),
       importPath: null,
+      classes: [],
     }))
 
   return [...scssComponents, ...styleScripts, ...uiComponents].sort((left, right) =>
@@ -967,7 +985,7 @@ function buildSearchableFiles(
   const uiSourceSearchables = uiSourceFiles.map<SearchableFile>((filePath, index) => ({
     filePath,
     relativePath: path.relative(sourceDir, filePath),
-    kind: filePath.replace(/\\/g, '/').includes('/src/components/') ? 'ui-component' : 'style-script',
+    kind: anchoredRelative(sourceDir, filePath).includes('/src/components/') ? 'ui-component' : 'style-script',
     content: uiSourceContents[index],
   }))
 
@@ -975,11 +993,11 @@ function buildSearchableFiles(
 }
 
 function classifyScssFile(filePath: string, sourceDir: string): ComponentKind {
-  const relativePath = path.relative(sourceDir, filePath).replace(/\\/g, '/')
-  if (relativePath.includes('/scss/components/')) {
+  const anchoredPath = anchoredRelative(sourceDir, filePath)
+  if (anchoredPath.includes('/scss/components/')) {
     return 'style-component'
   }
-  if (relativePath.includes('/scss/utils/')) {
+  if (anchoredPath.includes('/scss/utils/')) {
     return 'util'
   }
   return 'token'
@@ -1029,25 +1047,49 @@ function buildEntrypoints(sourceDir: string, layout: SourceLayout): EntryPoint[]
       relativePath: path.relative(sourceDir, path.join(layout.stylePackageDir, 'assets/fonts.css')),
       description: 'Font-face declarations for Figtree and related assets.',
     },
+  ]
+
+  // Authored sources exist only in a monorepo checkout; an installed package
+  // ships the built bundles instead. Emit whichever is actually on disk so the
+  // reported entrypoint is always a real file.
+  const scriptCandidates: ScriptEntrypointCandidate[] = [
     {
       name: 'style-index',
-      type: 'js',
-      relativePath: path.relative(sourceDir, path.join(layout.stylePackageDir, 'src/index.ts')),
       description: 'Main non-React TypeScript exports for @kth/style.',
+      sourceRelative: 'src/index.ts',
+      distRelative: 'dist/esm/index.js',
     },
     {
       name: 'menu-panel-script',
-      type: 'js',
-      relativePath: path.relative(sourceDir, path.join(layout.stylePackageDir, 'src/components/MenuPanel.ts')),
       description: 'Dialog behavior for menu panels and mobile menu overlays.',
+      sourceRelative: 'src/components/MenuPanel.ts',
+      distRelative: 'dist/esm/index.js',
     },
     {
       name: 'local-navigation-script',
-      type: 'js',
-      relativePath: path.relative(sourceDir, path.join(layout.stylePackageDir, 'src/localNavigation.ts')),
       description: 'Legacy local-navigation cloning for mobile menu lists.',
+      sourceRelative: 'src/localNavigation.ts',
+      distRelative: 'dist/localNavigation.d.ts',
     },
   ]
+
+  for (const candidate of scriptCandidates) {
+    const sourcePath = path.join(layout.stylePackageDir, candidate.sourceRelative)
+    const distPath = path.join(layout.stylePackageDir, candidate.distRelative)
+    const resolved = existsSync(sourcePath) ? sourcePath : existsSync(distPath) ? distPath : null
+    if (!resolved) {
+      continue
+    }
+    entries.push({
+      name: candidate.name,
+      type: 'js',
+      relativePath: path.relative(sourceDir, resolved),
+      description:
+        resolved === sourcePath
+          ? candidate.description
+          : `${candidate.description} Resolved to the published bundle; authored sources are not part of the installed package.`,
+    })
+  }
 
   if (layout.uiComponentsDir) {
     entries.push({
@@ -1059,6 +1101,22 @@ function buildEntrypoints(sourceDir: string, layout: SourceLayout): EntryPoint[]
   }
 
   return entries
+}
+
+/**
+ * Matches on a leading-slash-anchored relative path so that both supported
+ * layouts hit the same branch: an installed package (sourceDir is the package
+ * itself, giving `scss/components/x.scss`) and a monorepo checkout (sourceDir is
+ * the repo root, giving `@kth/style/scss/components/x.scss`).
+ */
+function anchoredRelative(sourceDir: string, filePath: string): string {
+  return `/${path.relative(sourceDir, filePath).replace(/\\/g, '/')}`
+}
+
+/** Collects the `kth-*` class selectors a stylesheet declares. */
+function parseComponentClasses(content: string): string[] {
+  const matches = content.match(/\.kth-[a-zA-Z0-9_-]+/g) ?? []
+  return [...new Set(matches.map((match) => match.slice(1)))].sort()
 }
 
 function normalizeName(name: string): string {

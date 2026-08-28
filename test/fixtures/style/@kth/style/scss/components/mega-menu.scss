@@ -1,0 +1,12 @@
+@use "../tokens/spacing";
+@use "../utils/mixins";
+
+.kth-mega-menu {
+  gap: spacing.$space-16;
+
+  @include mixins.container;
+}
+
+.kth-mega-menu--collapsable {
+  display: none;
+}

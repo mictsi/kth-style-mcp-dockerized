@@ -1,0 +1,9 @@
+@use "../tokens/spacing";
+@use "../tokens/icons";
+
+.kth-icon-button {
+  padding: spacing.$space-4;
+  color: var(--color-on-header);
+
+  @include icons.icon-close;
+}

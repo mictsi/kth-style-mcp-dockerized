@@ -2,19 +2,48 @@ import { getIcon, getToken, type Catalog, type Component, type EntryPoint, type 
 
 type ThemeVariant = 'public' | 'intranet' | 'student-web' | 'external'
 type AppType = ThemeVariant
-type GuidedComponent =
-  | 'header'
-  | 'footer'
-  | 'navigation'
-  | 'search'
-  | 'button'
-  | 'input'
-  | 'table'
-  | 'alert'
-  | 'accordion'
-  | 'translation-panel'
-  | 'local-navigation'
-  | 'modal'
+
+/**
+ * Every SCSS component published by @kth/style, plus two aliases kept for
+ * callers that think in terms of behaviour rather than file names.
+ * `navigation` and `modal` are not files in the package; they map onto the
+ * dialog-based components that implement them.
+ */
+export const GUIDED_COMPONENTS = [
+  'a11y-nav',
+  'accordion',
+  'alert',
+  'breadcrumbs',
+  'button',
+  'content',
+  'details',
+  'footer',
+  'header',
+  'icon-button',
+  'input',
+  'kpm',
+  'local-navigation',
+  'logotype',
+  'mega-menu',
+  'menu-item',
+  'menu-panel',
+  'mobile-menu',
+  'navigation',
+  'search',
+  'table',
+  'tabs',
+  'translation-panel',
+  'modal',
+  'visually-hidden',
+] as const
+
+type GuidedComponent = (typeof GUIDED_COMPONENTS)[number]
+
+/** Aliases that resolve to the SCSS file actually implementing the behaviour. */
+const COMPONENT_ALIASES: Partial<Record<GuidedComponent, string>> = {
+  navigation: 'menu-panel',
+  modal: 'menu-panel',
+}
 
 interface GuidanceToken extends Token {}
 
@@ -552,7 +581,10 @@ export function getComponentGuidance(
         ]),
         icons: selectIcons(catalog, ['menu', 'arrow-back', 'arrow-forward-500']),
         domHooks: [{ selectorType: 'class', name: 'kth-button', purpose: 'Base button class used by both raw markup and the React wrapper.' }],
-        notes: ['The React Button component maps variants directly onto the kth-button class names used in button.scss.'],
+        notes: reactWrapperNotes(
+          selectComponents(catalog, [['ui-component', 'Button'], ['ui-component', 'IconButton']]),
+          'The React Button component maps variants directly onto the kth-button class names used in button.scss.'
+        ),
       }
     case 'input':
       return {
@@ -578,7 +610,13 @@ export function getComponentGuidance(
         ]),
         icons: selectIcons(catalog, ['input-checkbox', 'warning-500']),
         domHooks: [{ selectorType: 'class', name: 'kth-input', purpose: 'Base input wrapper class used by the style package.' }],
-        notes: ['The .error modifier adds the left border and warning icon treatment.'],
+        notes: [
+          'The .error modifier adds the left border and warning icon treatment.',
+          ...reactWrapperNotes(
+            selectComponents(catalog, [['ui-component', 'InputGroup'], ['ui-component', 'CheckboxOption'], ['ui-component', 'RadioButtonOption']]),
+            'InputGroup, CheckboxOption and RadioButtonOption wrap the same kth-input/kth-checkbox/kth-radio classes.'
+          ),
+        ],
       }
     case 'table':
       return {
@@ -615,17 +653,17 @@ export function getComponentGuidance(
         mixins: selectMixins(catalog, [['font-default', '/scss/tokens/typography.scss']]),
         icons: selectIcons(catalog, ['info-500', 'warning-500', 'check-500']),
         domHooks: [{ selectorType: 'class', name: 'kth-alert', purpose: 'Base alert class used by both raw markup and the React wrapper.' }],
-        notes: ['Alert.tsx maps the React variant prop to the same .info/.warning/.success classes used by alert.scss.'],
+        notes: reactWrapperNotes(
+          selectComponents(catalog, [['ui-component', 'Alert']]),
+          'Alert.tsx maps the React variant prop to the same .info/.warning/.success classes used by alert.scss.'
+        ),
       }
     case 'accordion':
       return {
         component,
         variant: 'shared',
         summary: 'Accordion styles and the summary-title toggle helper.',
-        components: selectComponents(catalog, [
-          ['style-component', 'accordion'],
-          ['style-script', 'Accordion'],
-        ]),
+        components: selectComponents(catalog, [['style-component', 'accordion']]),
         behaviorScripts: selectEntrypoints(catalog, ['style-index']),
         tokens: selectTokens(catalog, [
           `${theme.themeTokenPrefix}.color-tertiary`,
@@ -634,7 +672,10 @@ export function getComponentGuidance(
         mixins: selectMixins(catalog, [['icon-caret-down', '/scss/tokens/icons.scss']]),
         icons: selectIcons(catalog, ['caret-right']),
         domHooks: [{ selectorType: 'class', name: 'kth-accordion', purpose: 'Accordion root class around <details> markup.' }],
-        notes: ['toggleSummaryTitle() rewrites the <summary> text between "Show content" and "Hide content".'],
+        notes: [
+          'The accordion is CSS-only over native <details>/<summary> markup; @kth/style ships no accordion script.',
+          'See the details component for the related single-disclosure styling.',
+        ],
       }
     case 'translation-panel':
     case 'modal':
@@ -689,7 +730,126 @@ export function getComponentGuidance(
         ],
         notes: ['Despite the newer dialog-based menu system, localNavigation.ts still clones li elements by DOM id.'],
       }
+    default:
+      return buildGenericGuidance(catalog, component, variant, theme)
   }
+}
+
+/**
+ * What a component stylesheet actually references, read from its own source so
+ * guidance stays package-backed instead of hand-maintained: the semantic CSS
+ * variables it consumes, the Sass tokens and mixins it pulls in, the icon
+ * mixins it applies, and the theme mixins it re-declares (which is what makes a
+ * component theme-aware).
+ */
+interface ComponentSourceFacts {
+  semanticTokens: string[]
+  referenceTokens: string[]
+  mixins: string[]
+  icons: string[]
+  themeContexts: string[]
+}
+
+function analyzeComponentSource(catalog: Catalog, component: Component | undefined): ComponentSourceFacts {
+  const empty: ComponentSourceFacts = { semanticTokens: [], referenceTokens: [], mixins: [], icons: [], themeContexts: [] }
+  if (!component) {
+    return empty
+  }
+
+  const file = catalog.searchableFiles.find((candidate) => candidate.filePath === component.filePath)
+  if (!file) {
+    return empty
+  }
+
+  const unique = (values: string[]) => [...new Set(values)].sort()
+  const matchAll = (pattern: RegExp) => [...file.content.matchAll(pattern)].map((match) => match[1])
+
+  const includes = matchAll(/@include\s+[a-z0-9_-]+\.([a-z0-9_-]+)/gi)
+
+  return {
+    semanticTokens: unique(matchAll(/var\(\s*(--[a-z0-9-]+)/gi)),
+    referenceTokens: unique(matchAll(/\$([a-z0-9-]+)/gi)),
+    mixins: unique(includes.filter((name) => !name.startsWith('theme-') && !name.startsWith('icon-'))),
+    icons: unique(includes.filter((name) => name.startsWith('icon-')).map((name) => name.replace(/^icon-/, ''))),
+    themeContexts: unique(includes.filter((name) => name.startsWith('theme-')).map((name) => name.replace(/^theme-/, ''))),
+  }
+}
+
+function domHooksFromClasses(component: Component | undefined): GuidanceDomHook[] {
+  if (!component) {
+    return []
+  }
+  return component.classes.map((name) => ({
+    selectorType: 'class' as const,
+    name,
+    purpose: `Class selector declared by ${component.relativePath}.`,
+  }))
+}
+
+/**
+ * Guidance for any component without a bespoke entry. Everything reported is
+ * derived from the component's own stylesheet, so components added to
+ * @kth/style in later releases are covered without changing this file.
+ */
+function buildGenericGuidance(
+  catalog: Catalog,
+  component: GuidedComponent,
+  variant: ThemeVariant,
+  theme: (typeof THEME_CONFIG)[ThemeVariant]
+): ComponentGuidance {
+  const fileName = COMPONENT_ALIASES[component] ?? component
+  const match = catalog.components.find(
+    (candidate) => candidate.kind === 'style-component' && candidate.name === fileName
+  )
+  const facts = analyzeComponentSource(catalog, match)
+
+  const notes: string[] = []
+  if (!match) {
+    notes.push(
+      `No SCSS component named "${fileName}" exists in @kth/style ${catalog.packageInfo.version ?? 'unknown'}. No values were invented; check kth_style_list_components for the components this version publishes.`
+    )
+  } else {
+    notes.push(`Import with @use "${match.importPath}" and style the classes listed in domHooks.`)
+    if (facts.themeContexts.length > 0) {
+      notes.push(
+        `This component re-declares theme mixins for: ${facts.themeContexts.join(', ')}. Apply the matching variant class on its root element.`
+      )
+    } else {
+      notes.push('This component declares no theme variants of its own; it inherits semantic tokens from the enclosing theme context.')
+    }
+    if (component !== fileName) {
+      notes.push(`"${component}" is not a file in the package; it is served by ${match.relativePath}.`)
+    }
+  }
+
+  return {
+    component,
+    variant: facts.themeContexts.length > 0 ? variant : 'shared',
+    summary: match
+      ? `Package-backed guidance for the ${fileName} component, derived from ${match.relativePath}.`
+      : `No package-backed guidance available for "${component}".`,
+    components: match ? [match] : [],
+    behaviorScripts: [],
+    tokens: selectTokens(catalog, [
+      ...facts.semanticTokens.map((name) => `${theme.themeTokenPrefix}.${name.replace(/^--/, '')}`),
+      ...facts.referenceTokens,
+    ]),
+    mixins: catalog.mixins.filter((mixin) => facts.mixins.includes(mixin.name)),
+    icons: selectIcons(catalog, facts.icons),
+    domHooks: domHooksFromClasses(match),
+    notes,
+  }
+}
+
+/**
+ * React wrappers live in the separate @kth/ui-components package, which is not
+ * a dependency of @kth/style. Only state that they exist when the catalog
+ * actually indexed them.
+ */
+function reactWrapperNotes(components: Component[], note: string): string[] {
+  return components.some((component) => component.kind === 'ui-component')
+    ? [note]
+    : ['React wrappers are not available: @kth/ui-components is not installed alongside this @kth/style package. The SCSS classes below are the supported interface.']
 }
 
 function selectComponents(catalog: Catalog, selectors: Array<[Component['kind'], string]>): Component[] {

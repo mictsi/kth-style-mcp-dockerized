@@ -1,0 +1,7 @@
+@use "../tokens/colors.scss" as c;
+@use "../tokens/spacing.scss" as s;
+
+.kth-a11y-nav {
+  background: var(--color-background);
+  padding: s.$space-8;
+}

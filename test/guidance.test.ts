@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict'
+import { existsSync } from 'node:fs'
 import path from 'node:path'
 import test from 'node:test'
 
 import { buildCatalog } from '../src/catalog.js'
-import { getComponentGuidance, getHeaderRecipe, getPageScaffold, suggestThemeStructure } from '../src/guidance.js'
+import { getComponentGuidance, getHeaderRecipe, getPageScaffold, suggestThemeStructure, GUIDED_COMPONENTS } from '../src/guidance.js'
 
 const fixtureSourceDir = path.resolve('test/fixtures/style')
+const guidanceFixtureSourceDir = fixtureSourceDir
 
 test('suggestThemeStructure and getHeaderRecipe expose style-specific theme and dialog wiring', async () => {
   const catalog = await buildCatalog(fixtureSourceDir)
@@ -55,4 +57,61 @@ test('page scaffold and component guidance map to the style package model', asyn
   const navigationGuidance = getComponentGuidance(catalog, 'navigation', 'public')
   assert.ok(navigationGuidance.behaviorScripts.some((script) => script.name === 'menu-panel-script'))
   assert.ok(navigationGuidance.icons.some((icon) => icon.name === 'menu'))
+})
+
+test('every guided component resolves to package-backed data', async () => {
+  const catalog = await buildCatalog(guidanceFixtureSourceDir)
+
+  for (const component of GUIDED_COMPONENTS) {
+    const guidance = getComponentGuidance(catalog, component)
+
+    assert.ok(guidance.components.length > 0, `${component} returned no components`)
+    assert.ok(guidance.notes.length > 0, `${component} returned no notes`)
+    for (const entry of guidance.components) {
+      assert.ok(
+        catalog.components.includes(entry),
+        `${component} returned an entry that is not in the catalog`
+      )
+    }
+  }
+})
+
+test('guidance for a component without a bespoke entry is derived from its stylesheet', async () => {
+  const catalog = await buildCatalog(guidanceFixtureSourceDir)
+  const guidance = getComponentGuidance(catalog, 'tabs')
+
+  assert.equal(guidance.components[0]?.name, 'tabs')
+  assert.deepEqual(
+    guidance.domHooks.map((hook) => hook.name),
+    ['kth-tabs']
+  )
+  assert.ok(guidance.mixins.some((mixin) => mixin.name === 'horizontal-list'))
+  assert.ok(guidance.notes.some((note) => note.includes('@use')))
+})
+
+test('behaviour aliases map onto the components that implement them', async () => {
+  const catalog = await buildCatalog(guidanceFixtureSourceDir)
+
+  for (const alias of ['navigation', 'modal'] as const) {
+    const guidance = getComponentGuidance(catalog, alias)
+    assert.equal(guidance.component, alias)
+    assert.ok(guidance.components.length > 0, `${alias} returned no components`)
+  }
+})
+
+test('React wrapper claims are dropped when @kth/ui-components is absent', async (t) => {
+  // The installed package is a bare @kth/style with no sibling ui-components,
+  // which is exactly the layout the Docker image runs against.
+  const installedDir = path.resolve('node_modules/@kth/style')
+  if (!existsSync(installedDir)) {
+    t.skip('installed @kth/style not present')
+    return
+  }
+
+  const withoutReact = await buildCatalog(installedDir)
+  const guidance = getComponentGuidance(withoutReact, 'alert')
+
+  assert.equal(withoutReact.uiComponentsDir, null)
+  assert.ok(guidance.notes.some((note) => note.includes('not available')))
+  assert.ok(!guidance.notes.some((note) => note.includes('Alert.tsx')))
 })

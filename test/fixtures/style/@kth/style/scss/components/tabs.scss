@@ -1,0 +1,9 @@
+@use "../tokens/spacing";
+@use "../utils/mixins";
+
+.kth-tabs {
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-primary);
+
+  @include mixins.horizontal-list;
+}

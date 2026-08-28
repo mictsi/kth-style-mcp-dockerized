@@ -1,0 +1,9 @@
+@use "../tokens/spacing";
+@use "../tokens/icons";
+
+.kth-menu-item {
+  padding: spacing.$space-8;
+  color: var(--color-on-header);
+
+  @include icons.icon-caret-right;
+}

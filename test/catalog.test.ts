@@ -22,6 +22,7 @@ import {
 } from '../src/catalog.js'
 
 const fixtureSourceDir = path.resolve('test/fixtures/style')
+const fixtureStylePackageDir = path.resolve('test/fixtures/style/@kth/style')
 
 test('buildCatalog parses primitive and theme tokens from the style monorepo layout', async () => {
   const catalog = await buildCatalog(fixtureSourceDir)
@@ -343,4 +344,49 @@ test('real style repo smoke test', async (t) => {
   assert.ok(catalog.icons.length > 20)
   assert.ok(catalog.components.length > 10)
   assert.ok(searchTokens(catalog, { category: 'themes', query: 'color-primary' }).length > 0)
+})
+
+test('the installed package layout indexes every SCSS component', async () => {
+  // Passing the package directory itself reproduces an installed @kth/style,
+  // where relative paths start at "scss/..." rather than "@kth/style/scss/...".
+  // Component discovery used to miss every file in that layout.
+  const catalog = await buildCatalog(fixtureStylePackageDir)
+
+  assert.equal(catalog.sourceDir, catalog.stylePackageDir)
+
+  const styleComponents = catalog.components.filter((component) => component.kind === 'style-component')
+  assert.ok(styleComponents.length >= 23, `expected the full component set, got ${styleComponents.length}`)
+  assert.ok(styleComponents.some((component) => component.name === 'header'))
+  assert.ok(catalog.components.some((component) => component.kind === 'token' && component.name === 'colors'))
+  assert.ok(catalog.components.some((component) => component.kind === 'util' && component.name === 'reset'))
+
+  const listed = listComponents(catalog, { kind: 'style-component', limit: 100 })
+  assert.equal(listed.length, styleComponents.length)
+})
+
+test('components expose the kth class selectors declared by their stylesheet', async () => {
+  const catalog = await buildCatalog(fixtureSourceDir)
+
+  const header = catalog.components.find(
+    (component) => component.kind === 'style-component' && component.name === 'header'
+  )
+  assert.ok(header)
+  assert.ok(header.classes.includes('kth-header'))
+
+  const tabs = catalog.components.find(
+    (component) => component.kind === 'style-component' && component.name === 'tabs'
+  )
+  assert.deepEqual(tabs?.classes, ['kth-tabs'])
+})
+
+test('every reported entrypoint resolves to a file that exists', async () => {
+  for (const sourceDir of [fixtureSourceDir, fixtureStylePackageDir]) {
+    const catalog = await buildCatalog(sourceDir)
+    for (const entrypoint of catalog.entrypoints) {
+      assert.ok(
+        existsSync(path.join(catalog.sourceDir, entrypoint.relativePath)),
+        `entrypoint ${entrypoint.name} points at missing file ${entrypoint.relativePath}`
+      )
+    }
+  }
 })

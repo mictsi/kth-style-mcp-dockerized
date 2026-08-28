@@ -1,0 +1,11 @@
+@use "../tokens/spacing";
+@use "../tokens/icons";
+
+@mixin details {
+  .kth-details {
+    padding-block: spacing.$space-8;
+    color: var(--color-tertiary);
+
+    @include icons.icon-caret-right;
+  }
+}

@@ -1,0 +1,9 @@
+@mixin horizontal-list {
+  display: flex;
+  list-style: none;
+}
+
+@mixin container {
+  margin-inline: auto;
+  max-width: 80rem;
+}

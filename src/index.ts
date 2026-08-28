@@ -22,7 +22,7 @@ import {
   searchTokens,
   type Catalog,
 } from './catalog.js'
-import { getComponentGuidance, getHeaderRecipe, getPageScaffold, suggestThemeStructure } from './guidance.js'
+import { getComponentGuidance, getHeaderRecipe, getPageScaffold, suggestThemeStructure, GUIDED_COMPONENTS } from './guidance.js'
 
 let catalogPromise: Promise<Catalog> | null = null
 
@@ -314,11 +314,11 @@ export function createServer(): McpServer {
   server.registerTool(
     'get_component_guidance',
     {
-      description: 'Return KTH Style guidance for a specific component area such as header, footer, navigation, button, input, alert, accordion, or translation-panel.',
+      description: `${AUTHORITATIVE_DESCRIPTION} Return guidance for one @kth/style component. Components without bespoke guidance are described from their own stylesheet: import path, declared kth-* classes, semantic and reference tokens, mixins, icons, and the theme variants the component itself declares.`,
       inputSchema: {
         component: z
-          .enum(['header', 'footer', 'navigation', 'search', 'button', 'input', 'table', 'alert', 'accordion', 'translation-panel', 'local-navigation', 'modal'])
-          .describe('Theme area to inspect.'),
+          .enum(GUIDED_COMPONENTS)
+          .describe('Component published by @kth/style, or one of the behaviour aliases navigation/modal. Call kth_style_list_components to see what the installed version ships.'),
         variant: z.enum(['public', 'intranet', 'student-web', 'external']).optional().describe('Theme variant when the component supports it.'),
       },
     },
